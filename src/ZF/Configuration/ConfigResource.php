@@ -97,7 +97,7 @@ class ConfigResource
         foreach ($array as $key => $value) {
             $targetKey = ('' === $currentKey) ? $key : $currentKey . '.' . $key;
             if (is_array($value)) {
-                $value = $this->traverseArray($value, $key);
+                $value = $this->traverseArray($value, $targetKey);
                 $flattened = array_merge($flattened, $value);
                 continue;
             }

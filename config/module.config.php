@@ -21,11 +21,6 @@ return array(
             'zf-api-first-admin' => array(
                 'child_routes' => array(
                     'api' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => '/api',
-                        ),
-                        'may_terminate' => false,
                         'child_routes' => array(
                             'config' => array(
                                 'type' => 'literal',
