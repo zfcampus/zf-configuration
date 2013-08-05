@@ -22,28 +22,6 @@ return array(
             ),
         ),
     ),
-    'router' => array(
-        'routes' => array(
-            'zf-api-first-admin' => array(
-                'child_routes' => array(
-                    'api' => array(
-                        'child_routes' => array(
-                            'config' => array(
-                                'type' => 'literal',
-                                'options' => array(
-                                    'route' => '/config',
-                                    'defaults' => array(
-                                        'controller' => 'ZF\Configuration\ConfigController',
-                                        'action'     => 'process',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
     'service_manager' => array(
         'invokables' => array(
             'ZF\Configuration\ConfigWriter' => 'Zend\Config\Writer\PhpArray',
