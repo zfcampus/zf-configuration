@@ -9,11 +9,7 @@ return array(
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
-            'ZF\Configuration\ConfigController' => array(
-                'Zend\View\Model\JsonModel' => array(
-                    'application/json',
-                ),
-            ),
+            'ZF\Configuration\ConfigController' => 'Json',
         ),
         'content-type-whitelist' => array(
             'ZF\ConfigController\ConfigController' => array(
