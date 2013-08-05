@@ -40,7 +40,7 @@ class ConfigController extends AbstractActionController
             return false;
         }
 
-        $header      = $headers->has('content-type');
+        $header      = $headers->get('content-type');
         $value       = $header->getFieldValue();
         $value       = explode(';', $value, 2);
         $contentType = array_shift($value);
