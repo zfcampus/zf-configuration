@@ -6,7 +6,9 @@
 namespace ZF\Configuration;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Http\Request;
 use ZF\ApiProblem\ApiProblem;
+use ZF\ApiProblem\View\ApiProblemModel;
 
 class ConfigController extends AbstractActionController
 {
@@ -30,7 +32,9 @@ class ConfigController extends AbstractActionController
                 $params = $this->bodyParams();
                 return $this->config->patch($params, $useTrees);
             default:
-                return new ApiProblem(405, 'Only the methods GET and PATCH are allowed for this URI');
+                return new ApiProblemModel(
+                    new ApiProblem(405, 'Only the methods GET and PATCH are allowed for this URI')
+                );
         }
     }
 
@@ -44,12 +48,26 @@ class ConfigController extends AbstractActionController
         $value       = $header->getFieldValue();
         $value       = explode(';', $value, 2);
         $contentType = array_shift($value);
-        $contentType = strtolower($value);
+        $contentType = strtolower($contentType);
 
-        if ($contentType === 'application/vnd.zfcampus.v1.config') {
+        if ($contentType === 'application/vnd.zfcampus.v1.config+json') {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Set the request object manually
+     *
+     * Provided for testing.
+     * 
+     * @param  Request $request 
+     * @return self
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
     }
 }
