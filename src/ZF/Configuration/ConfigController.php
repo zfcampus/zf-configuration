@@ -29,7 +29,7 @@ class ConfigController extends AbstractActionController
             case $request::METHOD_GET:
                 return $this->config->fetch($useTrees);
             case $request::METHOD_PATCH:
-                $params = $this->bodyParams();
+                $params = $this->getBodyParams($useTrees);
                 return $this->config->patch($params, $useTrees);
             default:
                 return new ApiProblemModel(
@@ -69,5 +69,23 @@ class ConfigController extends AbstractActionController
     {
         $this->request = $request;
         return $this;
+    }
+
+    /**
+     * Get the body params
+     *
+     * The body params plugin only knows about application/json, not our custom
+     * vendor type; if using our custom vendor type, parse the content.
+     * 
+     * @param  bool $useTrees 
+     * @return array
+     */
+    protected function getBodyParams($useTrees)
+    {
+        if (!$useTrees) {
+            return $this->bodyParams();
+        }
+
+        return json_decode($this->getRequest()->getContent(), true);
     }
 }
