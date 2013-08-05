@@ -33,7 +33,7 @@
     "require": {
         "php": ">=5.3.3",
         "zfcampus/zf-content-negotiation": "dev-master",
-        "zendframework/zendframework": ">=2.3.0dev"
+        "zendframework/zendframework": "dev-develop"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
