@@ -101,4 +101,52 @@ class ConfigResourceTest extends TestCase
 
         $this->assertEquals($expected, $configResource->fetch());
     }
+
+    public function testFetchWithTreeFlagSetToTrueReturnsConfigurationUnmodified()
+    {
+        $config = array(
+            'foo' => 'bar',
+            'bar' => array(
+                'baz' => 'bat',
+                'bat' => 'bogus',
+            ),
+            'baz' => 'not what you think',
+        );
+        $configResource = new ConfigResource($config, $this->file, $this->writer);
+        $this->assertEquals($config, $configResource->fetch(true));
+    }
+
+    public function testPatchWithTreeFlagSetToTruePerformsArrayMergeAndReturnsConfig()
+    {
+        $config = array(
+            'foo' => 'bar',
+            'bar' => array(
+                'baz' => 'bat',
+                'bat' => 'bogus',
+            ),
+            'baz' => 'not what you think',
+        );
+        $configResource = new ConfigResource($config, $this->file, $this->writer);
+
+        $patch = array(
+            'bar' => array(
+                'baz' => 'UPDATED',
+            ),
+            'baz' => 'what you think',
+        );
+        $response = $configResource->patch($patch, true);
+
+        $this->assertEquals($patch, $response);
+
+        $expected = array(
+            'foo' => 'bar',
+            'bar' => array(
+                'baz' => 'UPDATED',
+                'bat' => 'bogus',
+            ),
+            'baz' => 'what you think',
+        );
+        $written = $this->writer->writtenConfig;
+        $this->assertEquals($expected, $written);
+    }
 }

@@ -15,6 +15,12 @@ return array(
                 ),
             ),
         ),
+        'content-type-whitelist' => array(
+            'ZF\ConfigController\ConfigController' => array(
+                'application/json',
+                'application/vnd.zfcampus.v1.config',
+            ),
+        ),
     ),
     'router' => array(
         'routes' => array(

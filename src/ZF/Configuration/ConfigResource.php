@@ -47,7 +47,7 @@ class ConfigResource
      * @param  array|stdClass|Traversable $data 
      * @return array
      */
-    public function patch($data)
+    public function patch($data, $tree = false)
     {
         if ($data instanceof Traversable) {
             $data = ArrayUtils::iteratorToArray($data);
@@ -57,9 +57,13 @@ class ConfigResource
         }
 
         // Update configuration from dot-separated key/value pairs
-        $patchValues = array();
-        foreach ($data as $key => $value) {
-            $this->createNestedKeyValuePair($patchValues, $key, $value);
+        if (!$tree) {
+            $patchValues = array();
+            foreach ($data as $key => $value) {
+                $this->createNestedKeyValuePair($patchValues, $key, $value);
+            }
+        } else {
+            $patchValues = $data;
         }
         $this->config = ArrayUtils::merge($this->config, $patchValues);
 
@@ -78,8 +82,13 @@ class ConfigResource
      * @param  array $params 
      * @return array
      */
-    public function fetch()
+    public function fetch($tree = false)
     {
+        // If requested as a tree, return as-is
+        if ($tree) {
+            return $this->config;
+        }
+
         // Collapse to key/value pairs -- meaning to dot-separated nested keys
         return $this->traverseArray($this->config);
     }
