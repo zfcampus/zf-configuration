@@ -12,9 +12,16 @@ class ConfigResourceTest extends TestCase
 {
     public function setUp()
     {
-        $this->file   = 'php://memory';
+        $this->file = tempnam(sys_get_temp_dir(), 'zfconfig');
+        file_put_contents($this->file, '<' . "?php\nreturn array();");
+
         $this->writer = new TestAsset\ConfigWriter();
         $this->configResource = new ConfigResource(array(), $this->file, $this->writer);
+    }
+
+    public function tearDown()
+    {
+        unlink($this->file);
     }
 
     public function testCreateNestedKeyValuePairExtractsDotSeparatedKeysAndCreatesNestedStructure()
@@ -50,10 +57,8 @@ class ConfigResourceTest extends TestCase
         $this->assertEquals($patch, $response);
 
         $expected = array(
-            'foo' => 'bar',
             'bar' => array(
                 'baz' => 'UPDATED',
-                'bat' => 'bogus',
             ),
             'baz' => 'what you think',
         );
@@ -139,10 +144,8 @@ class ConfigResourceTest extends TestCase
         $this->assertEquals($patch, $response);
 
         $expected = array(
-            'foo' => 'bar',
             'bar' => array(
                 'baz' => 'UPDATED',
-                'bat' => 'bogus',
             ),
             'baz' => 'what you think',
         );

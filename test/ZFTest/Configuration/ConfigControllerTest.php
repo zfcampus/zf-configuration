@@ -17,7 +17,9 @@ class ConfigControllerTest extends TestCase
 {
     public function setUp()
     {
-        $this->file           = 'php://memory';
+        $this->file = tempnam(sys_get_temp_dir(), 'zfconfig');
+        file_put_contents($this->file, '<' . "?php\nreturn array();");
+
         $this->writer         = new TestAsset\ConfigWriter();
         $this->configResource = new ConfigResource(array(), $this->file, $this->writer);
         $this->controller     = new ConfigController($this->configResource);
@@ -25,6 +27,11 @@ class ConfigControllerTest extends TestCase
         $this->plugins = new ControllerPluginManager();
         $this->plugins->setService('BodyParams', new BodyParams());
         $this->controller->setPluginManager($this->plugins);
+    }
+
+    public function tearDown()
+    {
+        unlink($this->file);
     }
 
     public function invalidRequestMethods()
@@ -117,7 +124,7 @@ class ConfigControllerTest extends TestCase
 
         $request = new Request();
         $request->setMethod('patch');
-        $request->setPost(new Parameters(array(
+        $request->setContent(json_encode(array(
             'bar' => array(
                 'baz' => 'UPDATED',
             ),

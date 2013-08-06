@@ -52,6 +52,7 @@ class ConfigResource
         if ($data instanceof Traversable) {
             $data = ArrayUtils::iteratorToArray($data);
         }
+
         if ($data instanceof stdClass) {
             $data = (array) $data;
         }
@@ -65,10 +66,19 @@ class ConfigResource
         } else {
             $patchValues = $data;
         }
-        $this->config = ArrayUtils::merge($this->config, $patchValues);
+
+        // Get local config file
+        $localConfig = array();
+        if (file_exists($this->fileName)) {
+            $localConfig = include $this->fileName;
+            if (!is_array($localConfig)) {
+                $localConfig = array();
+            }
+        }
+        $localConfig = ArrayUtils::merge($localConfig, $patchValues);
 
         // Write to configuration file
-        $this->writer->toFile($this->fileName, $this->config);
+        $this->writer->toFile($this->fileName, $localConfig);
 
         // Return written values
         return $data;
