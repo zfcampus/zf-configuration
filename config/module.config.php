@@ -17,13 +17,13 @@ return array(
             'ZF\Configuration\ConfigController' => 'Json',
         ),
         'accept-whitelist' => array(
-            'ZF\ConfigController\ConfigController' => array(
+            'ZF\Configuration\ConfigController' => array(
                 'application/json',
                 'application/vnd.zfcampus.v1.config+json',
             ),
         ),
         'content-type-whitelist' => array(
-            'ZF\ConfigController\ConfigController' => array(
+            'ZF\Configuration\ConfigController' => array(
                 'application/json',
                 'application/vnd.zfcampus.v1.config+json',
             ),
