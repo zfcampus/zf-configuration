@@ -7,6 +7,11 @@ return array(
     'zf-configuration' => array(
         'config-file' => 'config/autoload/development.php',
     ),
+    'zf-api-problem' => array(
+        'render_error_controllers' => array(
+            'ZF\Configuration\ConfigController',
+        ),
+    ),
     'zf-content-negotiation' => array(
         'controllers' => array(
             'ZF\Configuration\ConfigController' => 'Json',
