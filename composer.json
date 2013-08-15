@@ -10,24 +10,9 @@
         "rest",
         "config"
     ],
-    "homepage": "https://bitbucket.org/zendframework/zfconfiguration",
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:zendframework/zfapiproblem.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:zendframework/zfhal.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:zendframework/zfcontentnegotiation.git"
-        },
-        {
-            "type": "composer",
-            "url": "https://packages.zendframework.com"
-        }
+        { "type": "composer", "url": "https://packages.zendframework.com" },
+        { "type": "composer", "url": "http://packages-zfcampus.rhcloud.com" }
     ],
     "minimum-stability": "dev",
     "require": {
