@@ -66,7 +66,11 @@ class Module
             'ZF\Configuration\ConfigController' => function ($controllers) {
                 $services = $controllers->getServiceLocator();
                 return new ConfigController($services->get('ZF\Configuration\ConfigResource'));
-            }
+            },
+            'ZF\Configuration\ModuleConfigController' => function ($controllers) {
+                $services = $controllers->getServiceLocator();
+                return new ConfigController($services->get('ZF\Configuration\ConfigResourceFactory'));
+            },
         ));
     }
 }
