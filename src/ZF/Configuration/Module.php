@@ -51,6 +51,12 @@ class Module
 
                 return new ConfigResource($config, $file, $writer);
             },
+            'ZF\Configuration\ConfigResourceFactory' => function ($services) {
+                $modules = $services->get('ModuleManager');
+                $writer  = $services->get('ZF\Configuration\ConfigWriter');
+
+                return new ResourceFactory($modules, $writer);
+            },
         ));
     }
 
