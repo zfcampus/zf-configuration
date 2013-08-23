@@ -52,10 +52,14 @@ class Module
                 return new ConfigResource($config, $file, $writer);
             },
             'ZF\Configuration\ConfigResourceFactory' => function ($services) {
-                $modules = $services->get('ModuleManager');
+                $modules = $services->get('ZF\Configuration\ModuleUtils');
                 $writer  = $services->get('ZF\Configuration\ConfigWriter');
 
                 return new ResourceFactory($modules, $writer);
+            },
+            'ZF\Configuration\ModuleUtils' => function ($services) {
+                $modules = $services->get('ModuleManager');
+                return new ModuleUtils($modules);
             },
         ));
     }
