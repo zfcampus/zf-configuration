@@ -152,7 +152,7 @@ class ModuleUtils
         }
 
         if (file_exists($path . '/config/module.config.php')) {
-            return $path;
+            return $path . '/config/module.config.php';
         }
 
         if (in_array(array('.', '/', '\\\\', '\\'), $path)
