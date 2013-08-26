@@ -80,6 +80,9 @@ class ConfigResource
         // Write to configuration file
         $this->writer->toFile($this->fileName, $localConfig);
 
+        // Reseed configuration
+        $this->config = $localConfig;
+
         // Return written values
         return $data;
     }
