@@ -85,6 +85,20 @@ class ConfigResource
     }
 
     /**
+     * Overwrite configuration
+     *
+     * Used by consumers only; takes the configuration data and writes it verbatim.
+     * 
+     * @param  array $data 
+     * @return array
+     */
+    public function overWrite(array $data)
+    {
+        $this->writer->toFile($this->fileName, $data);
+        return $data;
+    }
+
+    /**
      * Fetch all configuration values
      *
      * Flattens nested configuration to dot-separated key/value pairs and returns them.
