@@ -38,6 +38,7 @@ class ModuleUtils
      */
     public function getModulePath($moduleName)
     {
+        $moduleName = $this->normalizeModuleName($moduleName);
         if (isset($this->moduleData[$moduleName])
             && isset($this->moduleData[$moduleName]['path'])
         ) {
@@ -60,6 +61,7 @@ class ModuleUtils
      */
     public function getModuleConfigPath($moduleName)
     {
+        $moduleName = $this->normalizeModuleName($moduleName);
         if (isset($this->moduleData[$moduleName])
             && isset($this->moduleData[$moduleName]['config'])
         ) {
@@ -163,5 +165,16 @@ class ModuleUtils
         }
 
         return $this->recurseTree(dirname($path));
+    }
+
+    /**
+     * Normalize the module name
+     * 
+     * @param  string $moduleName 
+     * @return string
+     */
+    protected function normalizeModuleName($moduleName)
+    {
+        return str_replace(array('.', '/'), '\\', $moduleName);
     }
 }
