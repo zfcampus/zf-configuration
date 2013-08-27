@@ -98,6 +98,10 @@ class ConfigResource
     public function overWrite(array $data)
     {
         $this->writer->toFile($this->fileName, $data);
+
+        // Reseed configuration
+        $this->config = $data;
+
         return $data;
     }
 
