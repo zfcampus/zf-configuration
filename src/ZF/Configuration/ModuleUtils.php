@@ -155,7 +155,7 @@ class ModuleUtils
             return $path . '/config/module.config.php';
         }
 
-        if (in_array(array('.', '/', '\\\\', '\\'), $path)
+        if (in_array($path, array('.', '/', '\\\\', '\\'))
             || preg_match('#[a-z]:\\\\#i', $path)
         ) {
             // Don't recurse past the root

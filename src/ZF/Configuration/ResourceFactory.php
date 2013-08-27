@@ -42,6 +42,7 @@ class ResourceFactory
      */
     public function factory($moduleName)
     {
+        $moduleName = $this->normalizeModuleName($moduleName);
         if (isset($this->resources[$moduleName])) {
             return $this->resources[$moduleName];
         }
@@ -51,5 +52,10 @@ class ResourceFactory
 
         $this->resources[$moduleName] = new ConfigResource($config, $moduleConfigPath, $this->writer);
         return $this->resources[$moduleName];
+    }
+
+    protected function normalizeModuleName($moduleName)
+    {
+        return str_replace(array('.', '/'), '\\', $moduleName);
     }
 }
