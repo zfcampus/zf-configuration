@@ -19,7 +19,7 @@ class ConfigResource
 
     /**
      * File to which to write configuration
-     * 
+     *
      * @var string
      */
     protected $fileName;
@@ -30,7 +30,7 @@ class ConfigResource
     protected $writer;
 
     /**
-     * @param array $config 
+     * @param array $config
      */
     public function __construct(array $config, $fileName, ConfigWriter $writer)
     {
@@ -43,8 +43,8 @@ class ConfigResource
      * Allow patching one or more key/value pairs
      *
      * Expects data to be in the form of key/value pairs
-     * 
-     * @param  array|stdClass|Traversable $data 
+     *
+     * @param  array|stdClass|Traversable $data
      * @return array
      */
     public function patch($data, $tree = false)
@@ -88,11 +88,40 @@ class ConfigResource
     }
 
     /**
+     * Patch a single (potentially nested) key in the config file
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return array
+     */
+    public function patchKey($key, $value)
+    {
+        // Get local config file
+        $config = array();
+        if (file_exists($this->fileName)) {
+            $config = include $this->fileName;
+            if (!is_array($config)) {
+                $config = array();
+            }
+        }
+        $config = $this->replaceKey($key, $value, $config);
+
+        // Write to configuration file
+        $this->writer->toFile($this->fileName, $config);
+
+        // Reseed configuration
+        $this->config = $config;
+
+        // Return written values
+        return $config;
+    }
+
+    /**
      * Overwrite configuration
      *
      * Used by consumers only; takes the configuration data and writes it verbatim.
-     * 
-     * @param  array $data 
+     *
+     * @param  array $data
      * @return array
      */
     public function overWrite(array $data)
@@ -109,8 +138,8 @@ class ConfigResource
      * Fetch all configuration values
      *
      * Flattens nested configuration to dot-separated key/value pairs and returns them.
-     * 
-     * @param  array $params 
+     *
+     * @param  array $params
      * @return array
      */
     public function fetch($tree = false)
@@ -125,9 +154,54 @@ class ConfigResource
     }
 
     /**
+     * Replace a nested key
+     *
+     * First invocation should pass a dot-separated string representing a
+     * nested key.
+     *
+     * This value will be exploded to a list of keys, and the first element of
+     * the list will be compared against the provided configuration array; the
+     * method will recurse as necessary in order to replace the key.
+     *
+     * @param  string|array $keys
+     * @param  mixed $value
+     * @param  array $config
+     * @return array
+     */
+    public function replaceKey($keys, $value, array $config)
+    {
+        if (!is_array($keys)) {
+            $keys = explode('.', $keys);
+        }
+
+        $key = array_shift($keys);
+
+        $haveKeys = (count($keys) > 0) ? true : false;
+
+        // If no more keys, overwrite and return
+        if (!$haveKeys) {
+            $config[$key] = $value;
+            return $config;
+        }
+
+        // If key does not exist, or the current value is not an associative
+        // array, create nested set and return
+        if (!isset($config[$key])
+            || !ArrayUtils::isHashTable($config[$key])
+        ) {
+            $config[$key] = $this->replaceKey($keys, $value, array());
+            return $config;
+        }
+
+        // Otherwise, recurse through it
+        $config[$key] = $this->replaceKey($keys, $value, $config[$key]);
+        return $config;
+    }
+
+    /**
      * Traverse a nested array and flatten to dot-separated key/value pairs
-     * 
-     * @param  array $array 
+     *
+     * @param  array $array
      * @param  string $currentKey Current key, if called recursively
      * @return array
      */
@@ -151,10 +225,10 @@ class ConfigResource
      * Create a nested key/value pair from a dot-separated key value pair
      *
      * Extracts the nested pair into the array provided in $patchValues
-     * 
-     * @param array $patchValues 
-     * @param string $key 
-     * @param mixed $value 
+     *
+     * @param array $patchValues
+     * @param string $key
+     * @param mixed $value
      */
     public function createNestedKeyValuePair(&$patchValues, $key, $value)
     {
@@ -171,10 +245,10 @@ class ConfigResource
 
     /**
      * Recursively extract keys into a nested array
-     * 
-     * @param array $keys 
-     * @param string $value 
-     * @param array $array 
+     *
+     * @param array $keys
+     * @param string $value
+     * @param array $array
      */
     protected function extractAndSet(array $keys, $value, &$array)
     {

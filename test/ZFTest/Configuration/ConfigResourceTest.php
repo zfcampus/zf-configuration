@@ -6,6 +6,7 @@
 namespace ZFTest\Configuration;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use stdClass;
 use ZF\Configuration\ConfigResource;
 
 class ConfigResourceTest extends TestCase
@@ -22,6 +23,26 @@ class ConfigResourceTest extends TestCase
     public function tearDown()
     {
         unlink($this->file);
+    }
+
+    public function arrayIntersectAssocRecursive($array1, $array2)
+    {
+        if (!is_array($array1) || !is_array($array2)) {
+            if ($array1 === $array2) {
+                return $array1;
+            }
+            return false;
+        }
+
+        $commonKeys = array_intersect(array_keys($array1), array_keys($array2));
+        $return = array();
+        foreach ($commonKeys as $key) {
+            $value = $this->arrayIntersectAssocRecursive($array1[$key], $array2[$key]);
+            if ($value) {
+                $return[$key] = $value;
+            }
+        }
+        return $return;
     }
 
     public function testCreateNestedKeyValuePairExtractsDotSeparatedKeysAndCreatesNestedStructure()
@@ -151,5 +172,46 @@ class ConfigResourceTest extends TestCase
         );
         $written = $this->writer->writtenConfig;
         $this->assertEquals($expected, $written);
+    }
+
+    public function replaceKeyPairs()
+    {
+        return array(
+            'scalar-top-level' => array('top', 'updated', array('top' => 'updated')),
+            'overwrite-hash' => array('sub', 'updated', array('sub' => 'updated')),
+            'nested-scalar' => array('sub.level', 'updated', array('sub' => array('level' => 'updated'))),
+            'nested-list' => array('sub.list', array('three', 'four'), array('sub' => array('list' => array('three', 'four')))),
+            'nested-hash' => array('sub.hash.two', 'updated', array('sub' => array('hash' => array('two' => 'updated')))),
+            'overwrite-nested-null' => array('sub.null', 'updated', array('sub' => array('null' => 'updated'))),
+            'overwrite-nested-object' => array('sub.object', 'updated', array('sub' => array('object' => 'updated'))),
+        );
+    }
+
+    /**
+     * @dataProvider replaceKeyPairs
+     */
+    public function testReplaceKey($key, $value, $expected)
+    {
+        $config = array(
+            'top' => 'level',
+            'sub' => array(
+                'level' => 2,
+                'list'  => array(
+                    'one',
+                    'two',
+                ),
+                'hash' => array(
+                    'one' => 1,
+                    'two' => 2,
+                ),
+                'null' => null,
+                'object' => new stdClass(),
+            ),
+        );
+
+        $updated = $this->configResource->replaceKey($key, $value, $config);
+        $intersection = $this->arrayIntersectAssocRecursive($expected, $updated);
+        $this->assertEquals($expected, $intersection);
+        $this->assertEquals(2, count($updated));
     }
 }
