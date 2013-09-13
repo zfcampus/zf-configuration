@@ -199,6 +199,38 @@ class ConfigResource
     }
 
     /**
+     * Delete a key from the configuration array
+     *
+     * $key may be either an array of keys or a dot-separated set of keys.
+     *
+     * @param  array|string $keys
+     * @return array
+     */
+    public function deleteKey($keys)
+    {
+        // Get local config file
+        $config = array();
+        if (file_exists($this->fileName)) {
+            $config = include $this->fileName;
+            if (!is_array($config)) {
+                $config = array();
+            }
+        }
+
+        if (!is_array($keys)) {
+            $keys = explode('.', $keys);
+        }
+
+        if (empty($keys)) {
+            return $config;
+        }
+
+        $this->deleteByKey($config, $keys);
+        $this->writer->toFile($this->fileName, $config);
+        return $config;
+    }
+
+    /**
      * Traverse a nested array and flatten to dot-separated key/value pairs
      *
      * @param  array $array
@@ -260,5 +292,21 @@ class ConfigResource
             return;
         }
         $array[$key] = $value;
+    }
+
+    /**
+     * Delete a nested key/value pair in an array
+     *
+     * @param  array $array
+     * @param  array $keys
+     */
+    protected function deleteByKey(&$array, array $keys)
+    {
+        $key = array_shift($keys);
+        if (1 > count($keys)) {
+            unset($array[$key]);
+            return;
+        }
+        $this->deleteByKey($array[$key], $keys);
     }
 }

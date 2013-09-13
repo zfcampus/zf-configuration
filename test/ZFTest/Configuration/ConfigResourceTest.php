@@ -7,12 +7,16 @@ namespace ZFTest\Configuration;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
+use Zend\Config\Writer\PhpArray;
 use ZF\Configuration\ConfigResource;
 
 class ConfigResourceTest extends TestCase
 {
+    public $file;
+
     public function setUp()
     {
+        $this->removeScaffold();
         $this->file = tempnam(sys_get_temp_dir(), 'zfconfig');
         file_put_contents($this->file, '<' . "?php\nreturn array();");
 
@@ -22,7 +26,14 @@ class ConfigResourceTest extends TestCase
 
     public function tearDown()
     {
-        unlink($this->file);
+        $this->removeScaffold();
+    }
+
+    public function removeScaffold()
+    {
+        if ($this->file && file_exists($this->file)) {
+            unlink($this->file);
+        }
     }
 
     public function arrayIntersectAssocRecursive($array1, $array2)
@@ -213,5 +224,95 @@ class ConfigResourceTest extends TestCase
         $intersection = $this->arrayIntersectAssocRecursive($expected, $updated);
         $this->assertEquals($expected, $intersection);
         $this->assertEquals(2, count($updated));
+    }
+
+    public function deleteKeyPairs()
+    {
+        return array(
+            'scalar-top-level' => array('top', array('sub' => array(
+                'level' => 2,
+                'list'  => array(
+                    'one',
+                    'two',
+                ),
+                'hash' => array(
+                    'one' => 1,
+                    'two' => 2,
+                ),
+            ))),
+            'delete-hash' => array('sub', array('top' => 'level')),
+            'delete-nested-via-arrays' => array(array('sub', 'level'), array(
+                'top' => 'level',
+                'sub' => array(
+                    'list'  => array(
+                        'one',
+                        'two',
+                    ),
+                    'hash' => array(
+                        'one' => 1,
+                        'two' => 2,
+                    ),
+                ),
+            )),
+            'delete-nested-via-dot-separated-values' => array('sub.level', array(
+                'top' => 'level',
+                'sub' => array(
+                    'list'  => array(
+                        'one',
+                        'two',
+                    ),
+                    'hash' => array(
+                        'one' => 1,
+                        'two' => 2,
+                    ),
+                ),
+            )),
+            'delete-nested-array' => array('sub.list', array(
+                'top' => 'level',
+                'sub' => array(
+                    'level' => 2,
+                    'hash' => array(
+                        'one' => 1,
+                        'two' => 2,
+                    ),
+                ),
+            )),
+        );
+    }
+
+    /**
+     * @dataProvider deleteKeyPairs
+     * @group fail
+     */
+    public function testDeleteKey($key, array $expected)
+    {
+        $config = array(
+            'top' => 'level',
+            'sub' => array(
+                'level' => 2,
+                'list'  => array(
+                    'one',
+                    'two',
+                ),
+                'hash' => array(
+                    'one' => 1,
+                    'two' => 2,
+                ),
+            ),
+        );
+        $writer = new PhpArray();
+        $writer->toFile($this->file, $config);
+        // Ensure the writer has written to the file!
+        $this->assertEquals($config, include $this->file);
+
+        // Create config resource, and delete a key
+        $configResource = new ConfigResource($config, $this->file, $writer);
+        $test = $configResource->deleteKey($key);
+
+        // Verify what was returned was what we expected
+        $this->assertEquals($expected, $test);
+
+        // Verify the file contains what we expect
+        $this->assertEquals($expected, include $this->file);
     }
 }
