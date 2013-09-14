@@ -227,6 +227,10 @@ class ConfigResource
 
         $this->deleteByKey($config, $keys);
         $this->writer->toFile($this->fileName, $config);
+
+        // Reseed configuration
+        $this->config = $config;
+
         return $config;
     }
 
