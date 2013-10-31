@@ -159,7 +159,7 @@ class ModuleUtils
         }
 
         if (in_array($path, array('.', '/', '\\\\', '\\'))
-            || preg_match('#[a-z]:\\\\$#i', $path)
+            || preg_match('#[a-z]:(\\\\|/{1,2})$#i', $path)
         ) {
             // Don't recurse past the root
             return false;
