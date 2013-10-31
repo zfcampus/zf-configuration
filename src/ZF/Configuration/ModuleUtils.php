@@ -158,8 +158,9 @@ class ModuleUtils
             return $path . '/config/module.config.php';
         }
 
-        if (in_array($path, array('.', '/', '\\\\', '\\'))
-            || preg_match('#[a-z]:(\\\\|/{1,2})$#i', $path)
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
+            && (in_array($path, array('.', '/', '\\\\', '\\'))
+                || preg_match('#[a-z]:(\\\\|/{1,2})$#i', $path))
         ) {
             // Don't recurse past the root
             return false;
