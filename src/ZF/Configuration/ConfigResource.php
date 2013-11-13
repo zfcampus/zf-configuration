@@ -308,6 +308,10 @@ class ConfigResource
     protected function deleteByKey(&$array, array $keys)
     {
         $key = array_shift($keys);
+        if (!is_array($array) || !array_key_exists($key, $array)) {
+            return;
+        }
+
         if (1 > count($keys)) {
             unset($array[$key]);
             return;
