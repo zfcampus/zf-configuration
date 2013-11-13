@@ -352,4 +352,25 @@ class ConfigResourceTest extends TestCase
         $this->assertEquals($expected, $test);
         $this->assertSame($expected['sub']['sub2'], $test['sub']['sub2']);
     }
+
+    public function testDeleteNonexistentKeyShouldDoNothing()
+    {
+        $config = array();
+        $writer = new PhpArray();
+        $writer->toFile($this->file, $config);
+        // Ensure the writer has written to the file!
+        $this->assertEquals($config, include $this->file);
+
+        // Create config resource, and delete a key
+        $configResource = new ConfigResource($config, $this->file, $writer);
+        $test = $configResource->deleteKey('sub.sub2.sub3');
+
+        // Verify what was returned was what we expected
+        $expected = array();
+        $this->assertEquals($expected, $test);
+
+        // Verify the file contains what we expect
+        $test = include $this->file;
+        $this->assertEquals($expected, $test);
+    }
 }
