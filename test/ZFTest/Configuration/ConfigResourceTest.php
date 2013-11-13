@@ -283,7 +283,6 @@ class ConfigResourceTest extends TestCase
 
     /**
      * @dataProvider deleteKeyPairs
-     * @group fail
      */
     public function testDeleteKey($key, array $expected)
     {
@@ -315,5 +314,42 @@ class ConfigResourceTest extends TestCase
 
         // Verify the file contains what we expect
         $this->assertEquals($expected, include $this->file);
+    }
+
+    public function testDeleteNestedKeyShouldAssignArrayToParent()
+    {
+        $config = array(
+            'top' => 'level',
+            'sub' => array(
+                'sub2'  => array(
+                    'sub3' => array(
+                        'two',
+                    ),
+                ),
+            ),
+        );
+        $writer = new PhpArray();
+        $writer->toFile($this->file, $config);
+        // Ensure the writer has written to the file!
+        $this->assertEquals($config, include $this->file);
+
+        // Create config resource, and delete a key
+        $configResource = new ConfigResource($config, $this->file, $writer);
+        $test = $configResource->deleteKey('sub.sub2.sub3');
+
+        // Verify what was returned was what we expected
+        $expected = array(
+            'top' => 'level',
+            'sub' => array(
+                'sub2' => array(),
+            ),
+        );
+        $this->assertEquals($expected, $test);
+        $this->assertSame($expected['sub']['sub2'], $test['sub']['sub2']);
+
+        // Verify the file contains what we expect
+        $test = include $this->file;
+        $this->assertEquals($expected, $test);
+        $this->assertSame($expected['sub']['sub2'], $test['sub']['sub2']);
     }
 }
