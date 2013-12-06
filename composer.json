@@ -17,14 +17,16 @@
         "source": "https://github.com/zfcampus/zf-configuration",
         "issues": "https://github.com/zfcampus/zf-configuration/issues"
     },
-    "repositories": [
-        { "type": "composer", "url": "https://packages.zendframework.com" }
-    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zfcampus/zf-content-negotiation": "dev-master",
-        "zendframework/zendframework": "dev-develop"
+        "zfcampus/zf-content-negotiation": "~1.0-dev",
+        "zendframework/zendframework": "~2.3-dev"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
