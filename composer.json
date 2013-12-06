@@ -22,9 +22,9 @@
             "dev-master": "1.0-dev"
         }
     },
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
+        "zfcampus/zf-api-problem": "~1.0-dev",
         "zfcampus/zf-content-negotiation": "~1.0-dev",
         "zendframework/zendframework": "~2.3-dev"
     },
