@@ -33,4 +33,3 @@ class ResourceFactoryTest extends TestCase
         $this->assertEquals(['foo' => 'baz'], $this->testWriter->writtenConfig);
     }
 }
- 
