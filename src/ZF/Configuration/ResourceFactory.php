@@ -55,6 +55,11 @@ class ResourceFactory
         return $this->resources[$moduleName];
     }
 
+    public function createConfigResource(array $config, $filePath)
+    {
+        return new ConfigResource($config, $filePath, $this->writer);
+    }
+
     protected function normalizeModuleName($moduleName)
     {
         return str_replace(array('.', '/'), '\\', $moduleName);
