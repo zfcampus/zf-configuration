@@ -55,6 +55,11 @@ class ResourceFactory
         return $this->resources[$moduleName];
     }
 
+    /**
+     * @param array $config
+     * @param $filePath
+     * @return ConfigResource
+     */
     public function createConfigResource(array $config, $filePath)
     {
         return new ConfigResource($config, $filePath, $this->writer);
