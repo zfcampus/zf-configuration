@@ -291,7 +291,9 @@ class ConfigResource
     {
         $key = array_shift($keys);
         if (count($keys)) {
-            $array[$key] = array();
+            if (!isset($array[$key]) || !is_array($array[$key])) {
+                $array[$key] = array();
+            }
             $reference   = &$array[$key];
             $this->extractAndSet($keys, $value, $reference);
             return;
