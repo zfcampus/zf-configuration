@@ -14,6 +14,9 @@ use ZF\Configuration\ConfigResource;
 class ConfigResourceTest extends TestCase
 {
     public $file;
+    /** @var ConfigResource */
+    protected $configResource;
+    protected $writer;
 
     public function setUp()
     {
@@ -67,6 +70,10 @@ class ConfigResourceTest extends TestCase
         $this->assertInternalType('array', $patchValues['foo']['bar']);
         $this->assertArrayHasKey('baz', $patchValues['foo']['bar']);
         $this->assertEquals('value', $patchValues['foo']['bar']['baz']);
+
+        // ensure second call to createNestedKeyValuePair does not destroy original values
+        $this->configResource->createNestedKeyValuePair($patchValues, 'foo.bar.boom', 'value2');
+        $this->assertCount(2, $patchValues['foo']['bar']);
     }
 
     public function testPatchListUpdatesFileWithMergedConfig()
