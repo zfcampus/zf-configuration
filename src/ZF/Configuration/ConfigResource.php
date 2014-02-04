@@ -26,6 +26,13 @@ class ConfigResource
     protected $fileName;
 
     /**
+     * Whether or not OpCache is enabled
+     * 
+     * @var bool
+     */
+    protected $opcacheEnabled = false;
+
+    /**
      * @var ConfigWriter
      */
     protected $writer;
@@ -35,6 +42,8 @@ class ConfigResource
      */
     public function __construct(array $config, $fileName, ConfigWriter $writer)
     {
+        $this->opcacheEnabled = function_exists('opcache_invalidate') && ini_get('opcache.enable');
+
         $this->config   = $config;
         $this->fileName = $fileName;
         $this->writer   = $writer;
@@ -80,6 +89,7 @@ class ConfigResource
 
         // Write to configuration file
         $this->writer->toFile($this->fileName, $localConfig);
+        $this->invalidateCache($this->fileName);
 
         // Reseed configuration
         $this->config = $localConfig;
@@ -109,6 +119,7 @@ class ConfigResource
 
         // Write to configuration file
         $this->writer->toFile($this->fileName, $config);
+        $this->invalidateCache($this->fileName);
 
         // Reseed configuration
         $this->config = $config;
@@ -128,6 +139,7 @@ class ConfigResource
     public function overWrite(array $data)
     {
         $this->writer->toFile($this->fileName, $data);
+        $this->invalidateCache($this->fileName);
 
         // Reseed configuration
         $this->config = $data;
@@ -228,6 +240,7 @@ class ConfigResource
 
         $this->deleteByKey($config, $keys);
         $this->writer->toFile($this->fileName, $config);
+        $this->invalidateCache($this->fileName);
 
         // Reseed configuration
         $this->config = $config;
@@ -319,5 +332,19 @@ class ConfigResource
             return;
         }
         $this->deleteByKey($array[$key], $keys);
+    }
+
+    /**
+     * Invalidate the opcache for a given file
+     * 
+     * @param  string $filename 
+     */
+    protected function invalidateCache($filename)
+    {
+        if (!$this->opcacheEnabled) {
+            return;
+        }
+
+        opcache_invalidate($filename, true);
     }
 }
