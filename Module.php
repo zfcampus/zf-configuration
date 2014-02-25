@@ -6,6 +6,8 @@
 
 namespace ZF\Configuration;
 
+use Zend\Config\Writer\PhpArray;
+
 /**
  * ZF2 module
  */
@@ -36,6 +38,15 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
+            'ZF\Configuration\ConfigWriter' => function() {
+                $writer = new PhpArray();
+
+                if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+                    $writer->setUseBracketArraySyntax(true);
+                }
+
+                return $writer;
+            },
             'ZF\Configuration\ConfigResource' => function ($services) {
                 $config = array();
                 $file   = 'config/autoload/development.php';

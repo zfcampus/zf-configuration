@@ -30,9 +30,4 @@ return array(
             ),
         ),
     ),
-    'service_manager' => array(
-        'invokables' => array(
-            'ZF\Configuration\ConfigWriter' => 'Zend\Config\Writer\PhpArray',
-        ),
-    ),
 );
