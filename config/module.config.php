@@ -6,7 +6,8 @@
 
 return array(
     'zf-configuration' => array(
-        'config-file' => 'config/autoload/development.php',
+        'config_file' => 'config/autoload/development.php',
+        'enable_short_array' => true,
     ),
     'zf-api-problem' => array(
         'render_error_controllers' => array(
@@ -28,11 +29,6 @@ return array(
                 'application/json',
                 'application/vnd.zfcampus.v1.config+json',
             ),
-        ),
-    ),
-    'service_manager' => array(
-        'invokables' => array(
-            'ZF\Configuration\ConfigWriter' => 'Zend\Config\Writer\PhpArray',
         ),
     ),
 );
