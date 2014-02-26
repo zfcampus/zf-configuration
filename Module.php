@@ -38,10 +38,16 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
-            'ZF\Configuration\ConfigWriter' => function() {
+            'ZF\Configuration\ConfigWriter' => function($services) {
+                $useShortArray = false;
+                if ($services->has('Config')) {
+                    $config = $services->get('Config');
+                    if (isset($config['zf-configuration']['enable-short-array'])) {
+                        $useShortArray = (bool) $config['zf-configuration']['enable-short-array'];
+                    }
+                }
                 $writer = new PhpArray();
-
-                if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+                if ($useShortArray && version_compare(PHP_VERSION, '5.4.0', '>=')) {
                     $writer->setUseBracketArraySyntax(true);
                 }
 
