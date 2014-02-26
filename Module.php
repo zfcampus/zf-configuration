@@ -42,8 +42,8 @@ class Module
                 $useShortArray = false;
                 if ($services->has('Config')) {
                     $config = $services->get('Config');
-                    if (isset($config['zf-configuration']['enable-short-array'])) {
-                        $useShortArray = (bool) $config['zf-configuration']['enable-short-array'];
+                    if (isset($config['zf-configuration']['enable_short_array'])) {
+                        $useShortArray = (bool) $config['zf-configuration']['enable_short_array'];
                     }
                 }
                 $writer = new PhpArray();
@@ -59,9 +59,9 @@ class Module
                 if ($services->has('Config')) {
                     $config = $services->get('Config');
                     if (isset($config['zf-configuration'])
-                        && isset($config['zf-configuration']['config-file'])
+                        && isset($config['zf-configuration']['config_file'])
                     ) {
-                        $file = $config['zf-configuration']['config-file'];
+                        $file = $config['zf-configuration']['config_file'];
                     }
                 }
 

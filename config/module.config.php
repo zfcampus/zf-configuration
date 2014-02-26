@@ -6,8 +6,8 @@
 
 return array(
     'zf-configuration' => array(
-        'config-file' => 'config/autoload/development.php',
-        'enable-short-array' => true,
+        'config_file' => 'config/autoload/development.php',
+        'enable_short_array' => true,
     ),
     'zf-api-problem' => array(
         'render_error_controllers' => array(
