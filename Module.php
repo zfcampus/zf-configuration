@@ -38,7 +38,7 @@ class Module
     public function getServiceConfig()
     {
         return array('factories' => array(
-            'ZF\Configuration\ConfigWriter' => function($services) {
+            'ZF\Configuration\ConfigWriter' => function ($services) {
                 $useShortArray = false;
                 if ($services->has('Config')) {
                     $config = $services->get('Config');
