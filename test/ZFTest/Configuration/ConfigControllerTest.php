@@ -55,7 +55,7 @@ class ConfigControllerTest extends TestCase
         $result = $this->controller->processAction();
         $this->assertInstanceOf('ZF\ApiProblem\View\ApiProblemModel', $result);
         $apiProblem = $result->getApiProblem();
-        $this->assertEquals(405, $apiProblem->http_status);
+        $this->assertEquals(405, $apiProblem->status);
     }
 
     public function testProcessGetRequestWithZfCampusMediaTypeReturnsFullConfiguration()
