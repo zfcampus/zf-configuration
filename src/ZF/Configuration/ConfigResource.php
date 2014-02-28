@@ -1,7 +1,7 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Configuration;
@@ -27,7 +27,7 @@ class ConfigResource
 
     /**
      * Whether or not OpCache is enabled
-     * 
+     *
      * @var bool
      */
     protected $opcacheEnabled = false;
@@ -336,8 +336,8 @@ class ConfigResource
 
     /**
      * Invalidate the opcache for a given file
-     * 
-     * @param  string $filename 
+     *
+     * @param  string $filename
      */
     protected function invalidateCache($filename)
     {
