@@ -27,7 +27,7 @@ class ConfigResource
 
     /**
      * Whether or not OpCache is enabled
-     * 
+     *
      * @var bool
      */
     protected $opcacheEnabled = false;
@@ -336,8 +336,8 @@ class ConfigResource
 
     /**
      * Invalidate the opcache for a given file
-     * 
-     * @param  string $filename 
+     *
+     * @param  string $filename
      */
     protected function invalidateCache($filename)
     {

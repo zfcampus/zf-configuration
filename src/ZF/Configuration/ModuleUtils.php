@@ -171,8 +171,8 @@ class ModuleUtils
 
     /**
      * Normalize the module name
-     * 
-     * @param  string $moduleName 
+     *
+     * @param  string $moduleName
      * @return string
      */
     protected function normalizeModuleName($moduleName)

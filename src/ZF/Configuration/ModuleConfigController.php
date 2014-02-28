@@ -29,4 +29,4 @@ class ModuleConfigController extends AbstractConfigController
         $config = $this->configFactory->factory($module);
         return $config;
     }
-} 
+}

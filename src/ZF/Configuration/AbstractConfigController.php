@@ -63,8 +63,8 @@ abstract class AbstractConfigController extends AbstractActionController
      * Set the request object manually
      *
      * Provided for testing.
-     * 
-     * @param  Request $request 
+     *
+     * @param  Request $request
      * @return self
      */
     public function setRequest(Request $request)
@@ -78,8 +78,8 @@ abstract class AbstractConfigController extends AbstractActionController
      *
      * The body params plugin only knows about application/json, not our custom
      * vendor type; if using our custom vendor type, parse the content.
-     * 
-     * @param  bool $useTrees 
+     *
+     * @param  bool $useTrees
      * @return array
      */
     protected function getBodyParams($useTrees)
@@ -93,9 +93,9 @@ abstract class AbstractConfigController extends AbstractActionController
 
     /**
      * Get the mediatype from a given header
-     * 
-     * @param  \Zend\Http\Headers $headers 
-     * @param  string $header 
+     *
+     * @param  \Zend\Http\Headers $headers
+     * @param  string $header
      * @return string
      */
     protected function getHeaderType($headers, $header)
