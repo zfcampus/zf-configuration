@@ -81,18 +81,4 @@ class Module
             },
         ));
     }
-
-    public function getControllerConfig()
-    {
-        return array('factories' => array(
-            'ZF\Configuration\ConfigController' => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                return new ConfigController($services->get('ZF\Configuration\ConfigResource'));
-            },
-            'ZF\Configuration\ModuleConfigController' => function ($controllers) {
-                $services = $controllers->getServiceLocator();
-                return new ConfigController($services->get('ZF\Configuration\ConfigResourceFactory'));
-            },
-        ));
-    }
 }
