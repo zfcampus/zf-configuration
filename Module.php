@@ -39,13 +39,6 @@ class Module
     {
         return array('factories' => array(
             'ZF\Configuration\ConfigWriter' => function ($services) {
-                $useShortArray = false;
-                if ($services->has('Config')) {
-                    $config = $services->get('Config');
-                    if (isset($config['zf-configuration']['enable_short_array'])) {
-                        $useShortArray = (bool) $config['zf-configuration']['enable_short_array'];
-                    }
-                }
                 $writer = new PhpArray();
                 return $writer;
             },

@@ -7,28 +7,5 @@
 return array(
     'zf-configuration' => array(
         'config_file' => 'config/autoload/development.php',
-        'enable_short_array' => true,
-    ),
-    'zf-api-problem' => array(
-        'render_error_controllers' => array(
-            'ZF\Configuration\ConfigController',
-        ),
-    ),
-    'zf-content-negotiation' => array(
-        'controllers' => array(
-            'ZF\Configuration\ConfigController' => 'Json',
-        ),
-        'accept-whitelist' => array(
-            'ZF\Configuration\ConfigController' => array(
-                'application/json',
-                'application/vnd.zfcampus.v1.config+json',
-            ),
-        ),
-        'content-type-whitelist' => array(
-            'ZF\Configuration\ConfigController' => array(
-                'application/json',
-                'application/vnd.zfcampus.v1.config+json',
-            ),
-        ),
     ),
 );
