@@ -7,5 +7,10 @@
 return array(
     'zf-configuration' => array(
         'config_file' => 'config/autoload/development.php',
+        /* set the following flag if you wish to use PHP 5.4 short array syntax
+         * in configuration files manipulated by the ConfigWriter
+         *
+         * 'enable_short_array' => true,
+         */
     ),
 );
