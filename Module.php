@@ -39,7 +39,19 @@ class Module
     {
         return array('factories' => array(
             'ZF\Configuration\ConfigWriter' => function ($services) {
+                $useShortArray = false;
+                if ($services->has('Config')) {
+                    $config = $services->get('Config');
+                    if (isset($config['zf-configuration']['enable_short_array'])) {
+                        $useShortArray = (bool) $config['zf-configuration']['enable_short_array'];
+                    }
+                }
+
                 $writer = new PhpArray();
+                if ($useShortArray && version_compare(PHP_VERSION, '5.4.0', '>=')) {
+                    $writer->setUseBracketArraySyntax(true);
+                }
+
                 return $writer;
             },
             'ZF\Configuration\ConfigResource' => function ($services) {
