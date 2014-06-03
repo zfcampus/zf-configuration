@@ -9,6 +9,11 @@ Introduction
 `zf-configuration` is a module that provides configuration services that provide for the
 runtime management and modification of ZF2 application based configuration files.
 
+Requirements
+------------
+  
+Please see the [composer.json](composer.json) file.
+
 Installation
 ------------
 
