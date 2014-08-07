@@ -49,7 +49,7 @@ class ResourceFactory
         }
 
         $moduleConfigPath = $this->modules->getModuleConfigPath($moduleName);
-        $config           = include($moduleConfigPath);
+        $config           = include $moduleConfigPath;
 
         $this->resources[$moduleName] = new ConfigResource($config, $moduleConfigPath, $this->writer);
         return $this->resources[$moduleName];
