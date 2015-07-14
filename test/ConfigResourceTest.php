@@ -196,13 +196,35 @@ class ConfigResourceTest extends TestCase
     public function replaceKeyPairs()
     {
         return array(
-            'scalar-top-level' => array('top', 'updated', array('top' => 'updated')),
-            'overwrite-hash' => array('sub', 'updated', array('sub' => 'updated')),
-            'nested-scalar' => array('sub.level', 'updated', array('sub' => array('level' => 'updated'))),
-            'nested-list' => array('sub.list', array('three', 'four'), array('sub' => array('list' => array('three', 'four')))),
-            'nested-hash' => array('sub.hash.two', 'updated', array('sub' => array('hash' => array('two' => 'updated')))),
-            'overwrite-nested-null' => array('sub.null', 'updated', array('sub' => array('null' => 'updated'))),
-            'overwrite-nested-object' => array('sub.object', 'updated', array('sub' => array('object' => 'updated'))),
+            'scalar-top-level'        => array('top', 'updated', array('top' => 'updated')),
+            'overwrite-hash'          => array('sub', 'updated', array('sub' => 'updated')),
+            'nested-scalar'           => array('sub.level', 'updated', array(
+                'sub' => array(
+                    'level' => 'updated'
+                )
+            )),
+            'nested-list'             => array('sub.list', array('three', 'four'), array(
+                'sub' => array(
+                    'list' => array('three', 'four')
+                )
+            )),
+            'nested-hash'             => array('sub.hash.two', 'updated', array(
+                'sub' => array(
+                    'hash' => array(
+                        'two' => 'updated'
+                    )
+                )
+            )),
+            'overwrite-nested-null'   => array('sub.null', 'updated', array(
+                'sub' => array(
+                    'null' => 'updated'
+                )
+            )),
+            'overwrite-nested-object' => array('sub.object', 'updated', array(
+                'sub' => array(
+                    'object' => 'updated'
+                )
+            )),
         );
     }
 
