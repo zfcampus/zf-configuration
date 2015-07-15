@@ -14,12 +14,12 @@ class ModuleUtils
     /**
      * @var ModuleManager
      */
-    protected $modules = array();
+    protected $modules = [];
 
     /**
      * @var array
      */
-    protected $moduleData = array();
+    protected $moduleData = [];
 
     /**
      * @param  ModuleManager $modules
@@ -100,10 +100,10 @@ class ModuleUtils
     {
         $configPath = $this->deriveModuleConfig($moduleName);
         $modulePath = dirname(dirname($configPath));
-        $this->moduleData[$moduleName] = array(
+        $this->moduleData[$moduleName] = [
             'config' => $configPath,
             'path'   => $modulePath,
-        );
+        ];
     }
 
     /**
@@ -159,7 +159,7 @@ class ModuleUtils
         }
 
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
-            && (in_array($path, array('.', '/', '\\\\', '\\'))
+            && (in_array($path, ['.', '/', '\\\\', '\\'])
                 || preg_match('#[a-z]:(\\\\|/{1,2})$#i', $path))
         ) {
             // Don't recurse past the root
@@ -177,6 +177,6 @@ class ModuleUtils
      */
     protected function normalizeModuleName($moduleName)
     {
-        return str_replace(array('.', '/'), '\\', $moduleName);
+        return str_replace(['.', '/'], '\\', $moduleName);
     }
 }
