@@ -25,7 +25,7 @@ class ConfigResourceTest extends TestCase
         file_put_contents($this->file, '<' . "?php\nreturn array();");
 
         $this->writer = new TestAsset\ConfigWriter();
-        $this->configResource = new ConfigResource(array(), $this->file, $this->writer);
+        $this->configResource = new ConfigResource([], $this->file, $this->writer);
     }
 
     public function tearDown()
@@ -50,7 +50,7 @@ class ConfigResourceTest extends TestCase
         }
 
         $commonKeys = array_intersect(array_keys($array1), array_keys($array2));
-        $return = array();
+        $return = [];
         foreach ($commonKeys as $key) {
             $value = $this->arrayIntersectAssocRecursive($array1[$key], $array2[$key]);
             if ($value) {
@@ -62,7 +62,7 @@ class ConfigResourceTest extends TestCase
 
     public function testCreateNestedKeyValuePairExtractsDotSeparatedKeysAndCreatesNestedStructure()
     {
-        $patchValues = array();
+        $patchValues = [];
         $this->configResource->createNestedKeyValuePair($patchValues, 'foo.bar.baz', 'value');
         $this->assertArrayHasKey('foo', $patchValues);
         $this->assertInternalType('array', $patchValues['foo']);
@@ -78,70 +78,70 @@ class ConfigResourceTest extends TestCase
 
     public function testPatchListUpdatesFileWithMergedConfig()
     {
-        $config = array(
+        $config = [
             'foo' => 'bar',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
                 'bat' => 'bogus',
-            ),
+            ],
             'baz' => 'not what you think',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
 
-        $patch = array(
+        $patch = [
             'bar.baz' => 'UPDATED',
             'baz'     => 'what you think',
-        );
+        ];
         $response = $configResource->patch($patch);
 
         $this->assertEquals($patch, $response);
 
-        $expected = array(
-            'bar' => array(
+        $expected = [
+            'bar' => [
                 'baz' => 'UPDATED',
-            ),
+            ],
             'baz' => 'what you think',
-        );
+        ];
         $written = $this->writer->writtenConfig;
         $this->assertEquals($expected, $written);
     }
 
     public function testTraverseArrayFlattensToDotSeparatedKeyValuePairs()
     {
-        $config = array(
+        $config = [
             'foo' => 'bar',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
                 'bat' => 'bogus',
-            ),
+            ],
             'baz' => 'not what you think',
-        );
-        $expected = array(
+        ];
+        $expected = [
             'foo'     => 'bar',
             'bar.baz' => 'bat',
             'bar.bat' => 'bogus',
             'baz'     => 'not what you think',
-        );
+        ];
 
         $this->assertEquals($expected, $this->configResource->traverseArray($config));
     }
 
     public function testFetchFlattensComposedConfiguration()
     {
-        $config = array(
+        $config = [
             'foo' => 'bar',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
                 'bat' => 'bogus',
-            ),
+            ],
             'baz' => 'not what you think',
-        );
-        $expected = array(
+        ];
+        $expected = [
             'foo'     => 'bar',
             'bar.baz' => 'bat',
             'bar.bat' => 'bogus',
             'baz'     => 'not what you think',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
 
         $this->assertEquals($expected, $configResource->fetch());
@@ -149,83 +149,83 @@ class ConfigResourceTest extends TestCase
 
     public function testFetchWithTreeFlagSetToTrueReturnsConfigurationUnmodified()
     {
-        $config = array(
+        $config = [
             'foo' => 'bar',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
                 'bat' => 'bogus',
-            ),
+            ],
             'baz' => 'not what you think',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
         $this->assertEquals($config, $configResource->fetch(true));
     }
 
     public function testPatchWithTreeFlagSetToTruePerformsArrayMergeAndReturnsConfig()
     {
-        $config = array(
+        $config = [
             'foo' => 'bar',
-            'bar' => array(
+            'bar' => [
                 'baz' => 'bat',
                 'bat' => 'bogus',
-            ),
+            ],
             'baz' => 'not what you think',
-        );
+        ];
         $configResource = new ConfigResource($config, $this->file, $this->writer);
 
-        $patch = array(
-            'bar' => array(
+        $patch = [
+            'bar' => [
                 'baz' => 'UPDATED',
-            ),
+            ],
             'baz' => 'what you think',
-        );
+        ];
         $response = $configResource->patch($patch, true);
 
         $this->assertEquals($patch, $response);
 
-        $expected = array(
-            'bar' => array(
+        $expected = [
+            'bar' => [
                 'baz' => 'UPDATED',
-            ),
+            ],
             'baz' => 'what you think',
-        );
+        ];
         $written = $this->writer->writtenConfig;
         $this->assertEquals($expected, $written);
     }
 
     public function replaceKeyPairs()
     {
-        return array(
-            'scalar-top-level'        => array('top', 'updated', array('top' => 'updated')),
-            'overwrite-hash'          => array('sub', 'updated', array('sub' => 'updated')),
-            'nested-scalar'           => array('sub.level', 'updated', array(
-                'sub' => array(
+        return [
+            'scalar-top-level'        => ['top', 'updated', ['top' => 'updated']],
+            'overwrite-hash'          => ['sub', 'updated', ['sub' => 'updated']],
+            'nested-scalar'           => ['sub.level', 'updated', [
+                'sub' => [
                     'level' => 'updated'
-                )
-            )),
-            'nested-list'             => array('sub.list', array('three', 'four'), array(
-                'sub' => array(
-                    'list' => array('three', 'four')
-                )
-            )),
-            'nested-hash'             => array('sub.hash.two', 'updated', array(
-                'sub' => array(
-                    'hash' => array(
+                ]
+            ]],
+            'nested-list'             => ['sub.list', ['three', 'four'], [
+                'sub' => [
+                    'list' => ['three', 'four']
+                ]
+            ]],
+            'nested-hash'             => ['sub.hash.two', 'updated', [
+                'sub' => [
+                    'hash' => [
                         'two' => 'updated'
-                    )
-                )
-            )),
-            'overwrite-nested-null'   => array('sub.null', 'updated', array(
-                'sub' => array(
+                    ]
+                ]
+            ]],
+            'overwrite-nested-null'   => ['sub.null', 'updated', [
+                'sub' => [
                     'null' => 'updated'
-                )
-            )),
-            'overwrite-nested-object' => array('sub.object', 'updated', array(
-                'sub' => array(
+                ]
+            ]],
+            'overwrite-nested-object' => ['sub.object', 'updated', [
+                'sub' => [
                     'object' => 'updated'
-                )
-            )),
-        );
+                ]
+            ]],
+        ];
     }
 
     /**
@@ -233,22 +233,22 @@ class ConfigResourceTest extends TestCase
      */
     public function testReplaceKey($key, $value, $expected)
     {
-        $config = array(
+        $config = [
             'top' => 'level',
-            'sub' => array(
+            'sub' => [
                 'level' => 2,
-                'list'  => array(
+                'list'  => [
                     'one',
                     'two',
-                ),
-                'hash' => array(
+                ],
+                'hash' => [
                     'one' => 1,
                     'two' => 2,
-                ),
+                ],
                 'null' => null,
                 'object' => new stdClass(),
-            ),
-        );
+            ],
+        ];
 
         $updated = $this->configResource->replaceKey($key, $value, $config);
         $intersection = $this->arrayIntersectAssocRecursive($expected, $updated);
@@ -258,56 +258,56 @@ class ConfigResourceTest extends TestCase
 
     public function deleteKeyPairs()
     {
-        return array(
-            'scalar-top-level' => array('top', array('sub' => array(
+        return [
+            'scalar-top-level' => ['top', ['sub' => [
                 'level' => 2,
-                'list'  => array(
+                'list'  => [
                     'one',
                     'two',
-                ),
-                'hash' => array(
+                ],
+                'hash' => [
                     'one' => 1,
                     'two' => 2,
-                ),
-            ))),
-            'delete-hash' => array('sub', array('top' => 'level')),
-            'delete-nested-via-arrays' => array(array('sub', 'level'), array(
+                ],
+            ]]],
+            'delete-hash' => ['sub', ['top' => 'level']],
+            'delete-nested-via-arrays' => [['sub', 'level'], [
                 'top' => 'level',
-                'sub' => array(
-                    'list'  => array(
+                'sub' => [
+                    'list'  => [
                         'one',
                         'two',
-                    ),
-                    'hash' => array(
+                    ],
+                    'hash' => [
                         'one' => 1,
                         'two' => 2,
-                    ),
-                ),
-            )),
-            'delete-nested-via-dot-separated-values' => array('sub.level', array(
+                    ],
+                ],
+            ]],
+            'delete-nested-via-dot-separated-values' => ['sub.level', [
                 'top' => 'level',
-                'sub' => array(
-                    'list'  => array(
+                'sub' => [
+                    'list'  => [
                         'one',
                         'two',
-                    ),
-                    'hash' => array(
+                    ],
+                    'hash' => [
                         'one' => 1,
                         'two' => 2,
-                    ),
-                ),
-            )),
-            'delete-nested-array' => array('sub.list', array(
+                    ],
+                ],
+            ]],
+            'delete-nested-array' => ['sub.list', [
                 'top' => 'level',
-                'sub' => array(
+                'sub' => [
                     'level' => 2,
-                    'hash' => array(
+                    'hash' => [
                         'one' => 1,
                         'two' => 2,
-                    ),
-                ),
-            )),
-        );
+                    ],
+                ],
+            ]],
+        ];
     }
 
     /**
@@ -315,20 +315,20 @@ class ConfigResourceTest extends TestCase
      */
     public function testDeleteKey($key, array $expected)
     {
-        $config = array(
+        $config = [
             'top' => 'level',
-            'sub' => array(
+            'sub' => [
                 'level' => 2,
-                'list'  => array(
+                'list'  => [
                     'one',
                     'two',
-                ),
-                'hash' => array(
+                ],
+                'hash' => [
                     'one' => 1,
                     'two' => 2,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $writer = new PhpArray();
         $writer->toFile($this->file, $config);
         // Ensure the writer has written to the file!
@@ -347,16 +347,16 @@ class ConfigResourceTest extends TestCase
 
     public function testDeleteNestedKeyShouldAssignArrayToParent()
     {
-        $config = array(
+        $config = [
             'top' => 'level',
-            'sub' => array(
-                'sub2'  => array(
-                    'sub3' => array(
+            'sub' => [
+                'sub2'  => [
+                    'sub3' => [
                         'two',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
         $writer = new PhpArray();
         $writer->toFile($this->file, $config);
         // Ensure the writer has written to the file!
@@ -367,12 +367,12 @@ class ConfigResourceTest extends TestCase
         $test = $configResource->deleteKey('sub.sub2.sub3');
 
         // Verify what was returned was what we expected
-        $expected = array(
+        $expected = [
             'top' => 'level',
-            'sub' => array(
-                'sub2' => array(),
-            ),
-        );
+            'sub' => [
+                'sub2' => [],
+            ],
+        ];
         $this->assertEquals($expected, $test);
         $this->assertSame($expected['sub']['sub2'], $test['sub']['sub2']);
 
@@ -384,7 +384,7 @@ class ConfigResourceTest extends TestCase
 
     public function testDeleteNonexistentKeyShouldDoNothing()
     {
-        $config = array();
+        $config = [];
         $writer = new PhpArray();
         $writer->toFile($this->file, $config);
         // Ensure the writer has written to the file!
@@ -395,7 +395,7 @@ class ConfigResourceTest extends TestCase
         $test = $configResource->deleteKey('sub.sub2.sub3');
 
         // Verify what was returned was what we expected
-        $expected = array();
+        $expected = [];
         $this->assertEquals($expected, $test);
 
         // Verify the file contains what we expect

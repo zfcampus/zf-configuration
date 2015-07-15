@@ -69,7 +69,7 @@ class ConfigResource
 
         // Update configuration from dot-separated key/value pairs
         if (!$tree) {
-            $patchValues = array();
+            $patchValues = [];
             foreach ($data as $key => $value) {
                 $this->createNestedKeyValuePair($patchValues, $key, $value);
             }
@@ -78,11 +78,11 @@ class ConfigResource
         }
 
         // Get local config file
-        $localConfig = array();
+        $localConfig = [];
         if (file_exists($this->fileName)) {
             $localConfig = include $this->fileName;
             if (!is_array($localConfig)) {
-                $localConfig = array();
+                $localConfig = [];
             }
         }
         $localConfig = ArrayUtils::merge($localConfig, $patchValues);
@@ -108,11 +108,11 @@ class ConfigResource
     public function patchKey($key, $value)
     {
         // Get local config file
-        $config = array();
+        $config = [];
         if (file_exists($this->fileName)) {
             $config = include $this->fileName;
             if (!is_array($config)) {
-                $config = array();
+                $config = [];
             }
         }
         $config = $this->replaceKey($key, $value, $config);
@@ -202,7 +202,7 @@ class ConfigResource
         if (!isset($config[$key])
             || !ArrayUtils::isHashTable($config[$key])
         ) {
-            $config[$key] = $this->replaceKey($keys, $value, array());
+            $config[$key] = $this->replaceKey($keys, $value, []);
             return $config;
         }
 
@@ -222,11 +222,11 @@ class ConfigResource
     public function deleteKey($keys)
     {
         // Get local config file
-        $config = array();
+        $config = [];
         if (file_exists($this->fileName)) {
             $config = include $this->fileName;
             if (!is_array($config)) {
-                $config = array();
+                $config = [];
             }
         }
 
@@ -257,7 +257,7 @@ class ConfigResource
      */
     public function traverseArray(array $array, $currentKey = '')
     {
-        $flattened = array();
+        $flattened = [];
         foreach ($array as $key => $value) {
             $targetKey = ('' === $currentKey) ? $key : $currentKey . '.' . $key;
             if (is_array($value)) {
@@ -305,7 +305,7 @@ class ConfigResource
         $key = array_shift($keys);
         if (count($keys)) {
             if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = array();
+                $array[$key] = [];
             }
             $reference   = &$array[$key];
             $this->extractAndSet($keys, $value, $reference);

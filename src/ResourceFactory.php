@@ -23,7 +23,7 @@ class ResourceFactory
     /**
      * @var ConfigResource[]
      */
-    protected $resources = array();
+    protected $resources = [];
 
     /**
      * @param  ModuleManager $modules
@@ -67,6 +67,6 @@ class ResourceFactory
 
     protected function normalizeModuleName($moduleName)
     {
-        return str_replace(array('.', '/'), '\\', $moduleName);
+        return str_replace(['.', '/'], '\\', $moduleName);
     }
 }
