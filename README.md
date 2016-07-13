@@ -6,8 +6,8 @@ ZF Configuration
 Introduction
 ------------
 
-`zf-configuration` is a module that provides configuration services that provide for the
-runtime management and modification of ZF2 application based configuration files.
+zf-configuration is a module that provides configuration services that provide for the
+runtime management and modification of Zend Framework application configuration files.
 
 Requirements
 ------------
@@ -20,14 +20,14 @@ Installation
 Run the following `composer` command:
 
 ```console
-$ composer require "zfcampus/zf-configuration:~1.0-dev"
+$ composer require zfcampus/zf-configuration
 ```
 
 Alternately, manually add the following to your `composer.json`, in the `require` section:
 
 ```javascript
 "require": {
-    "zfcampus/zf-configuration": "~1.0-dev"
+    "zfcampus/zf-configuration": "^1.2"
 }
 ```
 
@@ -37,15 +37,20 @@ Finally, add the module name to your project's `config/application.config.php` u
 key:
 
 ```php
-return array(
+return [
     /* ... */
-    'modules' => array(
+    'modules' => [
         /* ... */
         'ZF\Configuration',
-    ),
+    ],
     /* ... */
-);
+];
 ```
+
+> ### zf-component-installer
+>
+> If you use [zf-component-installer](https://github.com/zendframework/zf-component-installer),
+> that plugin will install zf-configuration as a module for you.
 
 Configuration
 -------------
@@ -55,10 +60,10 @@ Configuration
 The top-level configuration key for user configuration of this module is `zf-configuration`.
 
 ```php
-'zf-configuration' => array(
+'zf-configuration' => [
     'config_file' => 'config/autoload/development.php',
     'enable_short_array' => false,
-),
+],
 ```
 
 #### Key: `enable_short_array`

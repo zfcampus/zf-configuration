@@ -7,6 +7,7 @@
 namespace ZFTest\Configuration;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use ZF\Configuration\ConfigResource;
 use ZF\Configuration\ModuleUtils;
 use ZF\Configuration\ResourceFactory;
 
@@ -18,7 +19,9 @@ class ResourceFactoryTest extends TestCase
     public function setup()
     {
         $this->resourceFactory = new ResourceFactory(
-            $this->getMock('ZF\Configuration\ModuleUtils', [], [], '', false),
+            $this->getMockBuilder(ModuleUtils::class, [], [], '', false)
+                ->disableOriginalConstructor()
+                ->getMock(),
             $this->testWriter = new TestAsset\ConfigWriter()
         );
     }
@@ -26,7 +29,7 @@ class ResourceFactoryTest extends TestCase
     public function testCreateConfigResource()
     {
         $resource = $this->resourceFactory->createConfigResource(['foo' => 'bar'], '/path/to/file.php');
-        $this->assertInstanceOf('ZF\Configuration\ConfigResource', $resource);
+        $this->assertInstanceOf(ConfigResource::class, $resource);
         $this->assertEquals(['foo' => 'bar'], $resource->fetch(true));
         $resource->overWrite(['foo' => 'baz']);
 
