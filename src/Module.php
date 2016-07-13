@@ -1,7 +1,7 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014-2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Configuration;
@@ -9,22 +9,10 @@ namespace ZF\Configuration;
 use Zend\Config\Writer\PhpArray;
 
 /**
- * ZF2 module
+ * Zend Framework module
  */
 class Module
 {
-    /**
-     * Retrieve autoloader configuration
-     *
-     * @return array
-     */
-    public function getAutoloaderConfig()
-    {
-        return array('Zend\Loader\StandardAutoloader' => array('namespaces' => array(
-            __NAMESPACE__ => __DIR__ . '/src/',
-        )));
-    }
-
     /**
      * Retrieve module configuration
      *
@@ -32,7 +20,7 @@ class Module
      */
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return include __DIR__ . '/../config/module.config.php';
     }
 
     public function getServiceConfig()
@@ -40,8 +28,8 @@ class Module
         return array('factories' => array(
             'ZF\Configuration\ConfigWriter' => function ($services) {
                 $useShortArray = false;
-                if ($services->has('Config')) {
-                    $config = $services->get('Config');
+                if ($services->has('config')) {
+                    $config = $services->get('config');
                     if (isset($config['zf-configuration']['enable_short_array'])) {
                         $useShortArray = (bool) $config['zf-configuration']['enable_short_array'];
                     }
@@ -57,8 +45,8 @@ class Module
             'ZF\Configuration\ConfigResource' => function ($services) {
                 $config = array();
                 $file   = 'config/autoload/development.php';
-                if ($services->has('Config')) {
-                    $config = $services->get('Config');
+                if ($services->has('config')) {
+                    $config = $services->get('config');
                     if (isset($config['zf-configuration'])
                         && isset($config['zf-configuration']['config_file'])
                     ) {
@@ -71,8 +59,8 @@ class Module
                 return new ConfigResource($config, $file, $writer);
             },
             'ZF\Configuration\ConfigResourceFactory' => function ($services) {
-                $modules = $services->get('ZF\Configuration\ModuleUtils');
-                $writer  = $services->get('ZF\Configuration\ConfigWriter');
+                $modules = $services->get(ModuleUtils::class);
+                $writer  = $services->get(ConfigWriter::class);
 
                 return new ResourceFactory($modules, $writer);
             },
