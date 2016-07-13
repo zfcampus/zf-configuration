@@ -26,7 +26,7 @@ class ResourceFactory
     protected $resources = [];
 
     /**
-     * @param  ModuleManager $modules
+     * @param  ModuleUtils $modules
      * @param  ConfigWriter $writer
      */
     public function __construct(ModuleUtils $modules, ConfigWriter $writer)
