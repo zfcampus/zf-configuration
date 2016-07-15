@@ -62,13 +62,13 @@ The top-level configuration key for user configuration of this module is `zf-con
 ```php
 'zf-configuration' => [
     'config_file' => 'config/autoload/development.php',
-    'enable_short_array' => false,
+    'enable_short_array' => true,
 ],
 ```
 
 #### Key: `enable_short_array`
 
-Set this value to a boolean `true` if you want to use PHP 5.4's square bracket (aka "short") array
+Set this value to a boolean `false` if you don't want to use square bracket (aka "short") array
 syntax.
 
 ZF2 Events

@@ -29,7 +29,7 @@ class ConfigWriterFactory
     }
 
     /**
-     * Discover the enable_short_array flag from configuration, if present.
+     * Discover the enable_short_array flag from configuration.
      *
      * @param ContainerInterface $container
      * @return bool
@@ -41,10 +41,6 @@ class ConfigWriterFactory
         }
 
         $config = $container->get('config');
-
-        if (! isset($config['zf-configuration']['enable_short_array'])) {
-            return false;
-        }
 
         return (bool) $config['zf-configuration']['enable_short_array'];
     }
