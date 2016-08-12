@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d1a2f3ed02ac84ba3d2bb4c164468321",
-    "content-hash": "78adbef39009ff0996aa29d27530f93b",
+    "hash": "50236fef20dbbead0cd8593e57dea5d2",
+    "content-hash": "3c48ef6554cc4c1bde24ec735c01c26f",
     "packages": [
         {
             "name": "zendframework/zend-config",
@@ -223,6 +223,33 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "container-interop/container-interop",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/container-interop/container-interop.git",
+                "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/fc08354828f8fd3245f77a66b9e23a6bca48297e",
+                "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Container\\": "src/Interop/Container/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
+            "time": "2014-12-30 15:22:37"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -1596,6 +1623,61 @@
                 "validate"
             ],
             "time": "2015-08-24 13:29:44"
+        },
+        {
+            "name": "zendframework/zend-servicemanager",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-servicemanager.git",
+                "reference": "f701b0d322741b0c8d8ca1288f249a49438029cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-servicemanager/zipball/f701b0d322741b0c8d8ca1288f249a49438029cd",
+                "reference": "f701b0d322741b0c8d8ca1288f249a49438029cd",
+                "shasum": ""
+            },
+            "require": {
+                "container-interop/container-interop": "~1.0",
+                "php": "^5.5 || ^7.0"
+            },
+            "provide": {
+                "container-interop/container-interop-implementation": "^1.1"
+            },
+            "require-dev": {
+                "ocramius/proxy-manager": "^1.0 || ^2.0",
+                "phpbench/phpbench": "^0.10.0",
+                "phpunit/phpunit": "^4.6 || ^5.2.10",
+                "squizlabs/php_codesniffer": "^2.5.1"
+            },
+            "suggest": {
+                "ocramius/proxy-manager": "ProxyManager 1.* to handle lazy initialization of services",
+                "zendframework/zend-stdlib": "zend-stdlib ^2.5 if you wish to use the MergeReplaceKey or MergeRemoveKey features in Config instances"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev",
+                    "dev-develop": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\ServiceManager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "homepage": "https://github.com/zendframework/zend-servicemanager",
+            "keywords": [
+                "service-manager",
+                "servicemanager",
+                "zf"
+            ],
+            "time": "2016-07-15 14:59:51"
         }
     ],
     "aliases": [],
