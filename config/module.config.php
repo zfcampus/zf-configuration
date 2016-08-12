@@ -14,6 +14,10 @@ return [
          *
          * 'enable_short_array' => true,
          */
+
+        // class_name_scalars defines whether configuration files
+        // manipulated by the ConfigWriter should use ::class notation
+        // 'class_name_scalars' => true,
     ],
     'service_manager' => [
         'factories' => [

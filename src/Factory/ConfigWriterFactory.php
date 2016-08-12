@@ -21,20 +21,25 @@ class ConfigWriterFactory
     {
         $writer = new PhpArray();
 
-        if ($this->discoverEnableShortArrayFlag($container)) {
+        if ($this->discoverConfigFlag($container, 'enable_short_array')) {
             $writer->setUseBracketArraySyntax(true);
+        }
+
+        if ($this->discoverConfigFlag($container, 'class_name_scalars')) {
+            $writer->setUseClassNameScalars(true);
         }
 
         return $writer;
     }
 
     /**
-     * Discover the enable_short_array flag from configuration, if present.
+     * Discover the $key flag from configuration, if present.
      *
      * @param ContainerInterface $container
+     * @param string $key
      * @return bool
      */
-    private function discoverEnableShortArrayFlag(ContainerInterface $container)
+    private function discoverConfigFlag(ContainerInterface $container, $key)
     {
         if (! $container->has('config')) {
             return false;
@@ -42,10 +47,10 @@ class ConfigWriterFactory
 
         $config = $container->get('config');
 
-        if (! isset($config['zf-configuration']['enable_short_array'])) {
+        if (! isset($config['zf-configuration'][$key])) {
             return false;
         }
 
-        return (bool) $config['zf-configuration']['enable_short_array'];
+        return (bool) $config['zf-configuration'][$key];
     }
 }

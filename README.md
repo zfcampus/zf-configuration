@@ -63,6 +63,7 @@ The top-level configuration key for user configuration of this module is `zf-con
 'zf-configuration' => [
     'config_file' => 'config/autoload/development.php',
     'enable_short_array' => false,
+    'class_name_scalars' => false,
 ],
 ```
 
@@ -70,6 +71,10 @@ The top-level configuration key for user configuration of this module is `zf-con
 
 Set this value to a boolean `true` if you want to use PHP 5.4's square bracket (aka "short") array
 syntax.
+
+#### Key: `class_name_scalars`
+
+Set this value to a boolean `true` if you want to use PHP 5.5's class name scalars (`::class` notation).
 
 ZF2 Events
 ----------
