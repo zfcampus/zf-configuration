@@ -152,7 +152,7 @@ class ConfigResource
      *
      * Flattens nested configuration to dot-separated key/value pairs and returns them.
      *
-     * @param  array $params
+     * @param  bool $tree
      * @return array
      */
     public function fetch($tree = false)
