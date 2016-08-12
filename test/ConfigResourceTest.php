@@ -42,7 +42,7 @@ class ConfigResourceTest extends TestCase
 
     public function arrayIntersectAssocRecursive($array1, $array2)
     {
-        if (!is_array($array1) || !is_array($array2)) {
+        if (! is_array($array1) || ! is_array($array2)) {
             if ($array1 === $array2) {
                 return $array1;
             }
