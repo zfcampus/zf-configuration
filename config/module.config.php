@@ -23,6 +23,6 @@ return [
             ConfigResourceFactory::class => Factory\ResourceFactoryFactory::class,
             ConfigWriter::class          => Factory\ConfigWriterFactory::class,
             ModuleUtils::class           => Factory\ModuleUtilsFactory::class,
-        ]
+        ],
     ],
 ];
