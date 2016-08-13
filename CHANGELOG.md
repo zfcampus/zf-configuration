@@ -2,11 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.2.1 - TBD
+## 1.2.1 - 2016-08-13
 
 ### Added
 
-- Nothing.
+- [#19](https://github.com/zfcampus/zf-configuration/pull/19) adds the ability
+  to enable usage of `::class` notation in generated configuration via a
+  configuration setting, `zf-configuration.class_name_scalars`.
 
 ### Deprecated
 
@@ -18,7 +20,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#19](https://github.com/zfcampus/zf-configuration/pull/19) fixes a syntax
+  error in the `ConfigResourceFactory`.
 
 ## 1.2.0 - 2016-07-13
 
