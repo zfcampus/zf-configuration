@@ -31,7 +31,7 @@ class ConfigResourceFactory
         return new ConfigResource(
             $config,
             $this->discoverConfigFile($config),
-            $container>get(ConfigWriter::class)
+            $container->get(ConfigWriter::class)
         );
     }
 
