@@ -9,11 +9,13 @@ namespace ZF\Configuration;
 return [
     'zf-configuration' => [
         'config_file' => 'config/autoload/development.php',
-        /* set the following flag if you wish to use short array syntax
-         * in configuration files manipulated by the ConfigWriter:
-         *
-         * 'enable_short_array' => true,
-         */
+        // set the following flag if you wish to use short array syntax
+        // in configuration files manipulated by the ConfigWriter:
+        // 'enable_short_array' => true,
+
+        // class_name_scalars defines whether configuration files
+        // manipulated by the ConfigWriter should use ::class notation
+        // 'class_name_scalars' => true,
     ],
     'service_manager' => [
         'factories' => [
@@ -21,6 +23,6 @@ return [
             ConfigResourceFactory::class => Factory\ResourceFactoryFactory::class,
             ConfigWriter::class          => Factory\ConfigWriterFactory::class,
             ModuleUtils::class           => Factory\ModuleUtilsFactory::class,
-        ]
+        ],
     ],
 ];

@@ -83,7 +83,7 @@ class ModuleUtils
      */
     protected function validateModule($moduleName)
     {
-        if (!array_key_exists($moduleName, $this->modules)) {
+        if (! array_key_exists($moduleName, $this->modules)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The module specified, "%s", does not exist; cannot retrieve module data',
                 $moduleName
@@ -150,7 +150,7 @@ class ModuleUtils
      */
     protected function recurseTree($path)
     {
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return false;
         }
 

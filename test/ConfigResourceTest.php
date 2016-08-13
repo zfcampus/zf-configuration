@@ -42,7 +42,7 @@ class ConfigResourceTest extends TestCase
 
     public function arrayIntersectAssocRecursive($array1, $array2)
     {
-        if (!is_array($array1) || !is_array($array2)) {
+        if (! is_array($array1) || ! is_array($array2)) {
             if ($array1 === $array2) {
                 return $array1;
             }
@@ -200,30 +200,30 @@ class ConfigResourceTest extends TestCase
             'overwrite-hash'          => ['sub', 'updated', ['sub' => 'updated']],
             'nested-scalar'           => ['sub.level', 'updated', [
                 'sub' => [
-                    'level' => 'updated'
-                ]
+                    'level' => 'updated',
+                ],
             ]],
             'nested-list'             => ['sub.list', ['three', 'four'], [
                 'sub' => [
-                    'list' => ['three', 'four']
-                ]
+                    'list' => ['three', 'four'],
+                ],
             ]],
             'nested-hash'             => ['sub.hash.two', 'updated', [
                 'sub' => [
                     'hash' => [
-                        'two' => 'updated'
-                    ]
-                ]
+                        'two' => 'updated',
+                    ],
+                ],
             ]],
             'overwrite-nested-null'   => ['sub.null', 'updated', [
                 'sub' => [
-                    'null' => 'updated'
-                ]
+                    'null' => 'updated',
+                ],
             ]],
             'overwrite-nested-object' => ['sub.object', 'updated', [
                 'sub' => [
-                    'object' => 'updated'
-                ]
+                    'object' => 'updated',
+                ],
             ]],
         ];
     }

@@ -68,7 +68,7 @@ class ConfigResource
         }
 
         // Update configuration from dot-separated key/value pairs
-        if (!$tree) {
+        if (! $tree) {
             $patchValues = [];
             foreach ($data as $key => $value) {
                 $this->createNestedKeyValuePair($patchValues, $key, $value);
@@ -81,7 +81,7 @@ class ConfigResource
         $localConfig = [];
         if (file_exists($this->fileName)) {
             $localConfig = include $this->fileName;
-            if (!is_array($localConfig)) {
+            if (! is_array($localConfig)) {
                 $localConfig = [];
             }
         }
@@ -111,7 +111,7 @@ class ConfigResource
         $config = [];
         if (file_exists($this->fileName)) {
             $config = include $this->fileName;
-            if (!is_array($config)) {
+            if (! is_array($config)) {
                 $config = [];
             }
         }
@@ -152,7 +152,7 @@ class ConfigResource
      *
      * Flattens nested configuration to dot-separated key/value pairs and returns them.
      *
-     * @param  array $params
+     * @param  bool $tree
      * @return array
      */
     public function fetch($tree = false)
@@ -183,7 +183,7 @@ class ConfigResource
      */
     public function replaceKey($keys, $value, array $config)
     {
-        if (!is_array($keys)) {
+        if (! is_array($keys)) {
             $keys = explode('.', $keys);
         }
 
@@ -192,15 +192,15 @@ class ConfigResource
         $haveKeys = (count($keys) > 0) ? true : false;
 
         // If no more keys, overwrite and return
-        if (!$haveKeys) {
+        if (! $haveKeys) {
             $config[$key] = $value;
             return $config;
         }
 
         // If key does not exist, or the current value is not an associative
         // array, create nested set and return
-        if (!isset($config[$key])
-            || !ArrayUtils::isHashTable($config[$key])
+        if (! isset($config[$key])
+            || ! ArrayUtils::isHashTable($config[$key])
         ) {
             $config[$key] = $this->replaceKey($keys, $value, []);
             return $config;
@@ -225,12 +225,12 @@ class ConfigResource
         $config = [];
         if (file_exists($this->fileName)) {
             $config = include $this->fileName;
-            if (!is_array($config)) {
+            if (! is_array($config)) {
                 $config = [];
             }
         }
 
-        if (!is_array($keys)) {
+        if (! is_array($keys)) {
             $keys = explode('.', $keys);
         }
 
@@ -282,7 +282,7 @@ class ConfigResource
      */
     public function createNestedKeyValuePair(&$patchValues, $key, $value)
     {
-        if (!is_array($patchValues)) {
+        if (! is_array($patchValues)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects the $patchValues argument to be an array; received %s',
                 __METHOD__,
@@ -304,7 +304,7 @@ class ConfigResource
     {
         $key = array_shift($keys);
         if (count($keys)) {
-            if (!isset($array[$key]) || !is_array($array[$key])) {
+            if (! isset($array[$key]) || ! is_array($array[$key])) {
                 $array[$key] = [];
             }
             $reference   = &$array[$key];
@@ -323,7 +323,7 @@ class ConfigResource
     protected function deleteByKey(&$array, array $keys)
     {
         $key = array_shift($keys);
-        if (!is_array($array) || !array_key_exists($key, $array)) {
+        if (! is_array($array) || ! array_key_exists($key, $array)) {
             return;
         }
 
@@ -341,7 +341,7 @@ class ConfigResource
      */
     protected function invalidateCache($filename)
     {
-        if (!$this->opcacheEnabled) {
+        if (! $this->opcacheEnabled) {
             return;
         }
 
