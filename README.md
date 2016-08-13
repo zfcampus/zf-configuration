@@ -74,6 +74,8 @@ syntax.
 
 #### Key: `class_name_scalars`
 
+- Since 1.2.1
+
 Set this value to a boolean `true` if you want to use PHP 5.5's class name scalars (`::class` notation).
 
 ZF2 Events
