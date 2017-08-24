@@ -9,13 +9,17 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#22](https://github.com/zfcampus/zf-configuration/pull/22) adds support for
   zend-config v3 releases.
 
+- [#23](https://github.com/zfcampus/zf-configuration/pull/23) adds support for
+  PHP 7.1 and the upcoming 7.2 release.
+
 ### Deprecated
 
 - Nothing.
 
 ### Removed
 
-- Nothing.
+- [#23](https://github.com/zfcampus/zf-configuration/pull/23) removes support
+  for HHVM.
 
 ### Fixed
 
