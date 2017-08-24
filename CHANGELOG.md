@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.3.0 - TBD
+## 1.3.0 - 2017-08-24
 
 ### Added
 
-- Nothing.
+- [#22](https://github.com/zfcampus/zf-configuration/pull/22) adds support for
+  zend-config v3 releases.
 
 ### Deprecated
 
