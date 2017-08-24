@@ -7,7 +7,7 @@
 namespace ZFTest\Configuration;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ProphecyInterface;
 use Zend\Config\Writer\PhpArray;
 use ZF\Configuration\Factory\ConfigWriterFactory;

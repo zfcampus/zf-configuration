@@ -6,7 +6,7 @@
 
 namespace ZFTest\Configuration;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Zend\Config\Writer\PhpArray;
 use ZF\Configuration\ConfigResource;
