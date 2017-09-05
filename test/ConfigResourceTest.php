@@ -9,6 +9,7 @@ namespace ZFTest\Configuration;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Zend\Config\Writer\PhpArray;
+use Zend\Stdlib\ArrayUtils;
 use ZF\Configuration\ConfigResource;
 
 class ConfigResourceTest extends TestCase
@@ -401,5 +402,128 @@ class ConfigResourceTest extends TestCase
         // Verify the file contains what we expect
         $test = include $this->file;
         $this->assertEquals($expected, $test);
+    }
+
+    public function patchKey()
+    {
+        return [
+            'scalar-top-level' => [
+                'top',
+                'updated',
+                ['top' => 'updated']
+            ],
+
+            'overwrite-hash' => [
+                'sub',
+                'updated',
+                ['sub' => 'updated'],
+            ],
+
+            'nested-scalar' => [
+                'sub.level',
+                'updated',
+                [
+                    'sub' => [
+                        'level' => 'updated',
+                    ],
+                ],
+            ],
+            'nested-list' => [
+                'sub.list',
+                ['three', 'four'],
+                [
+                    'sub' => [
+                        'list' => ['three', 'four'],
+                    ],
+                ],
+            ],
+            'nested-hash' => [
+                'sub.hash.two',
+                'updated',
+                [
+                    'sub' => [
+                        'hash' => [
+                            'two' => 'updated',
+                        ],
+                    ],
+                ],
+            ],
+            'overwrite-nested-null' => [
+                'sub.null',
+                'updated',
+                [
+                    'sub' => [
+                        'null' => 'updated',
+                    ],
+                ],
+            ],
+            'overwrite-nested-object' => [
+                'sub.object',
+                'updated',
+                [
+                    'sub' => [
+                        'object' => 'updated',
+                    ],
+                ],
+            ],
+            'merge-nested' => [
+                'sub.hash',
+                [
+                    'two' => 'two-updated',
+                    'three' => 'three-updated',
+                ],
+                [
+                    'sub' => [
+                        'hash' => [
+                            'one' => 1,
+                            'two' => 'two-updated',
+                            'three' => 'three-updated',
+                        ],
+                    ],
+                ],
+            ],
+            'add-new' => [
+                'sub',
+                ['new' => 'added'],
+                [
+                    'sub' => [
+                        'new' => 'added',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider patchKey
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param mixed $expected
+     */
+    public function testPatchKey($key, $value, $expected)
+    {
+        $config = [
+            'top' => 'level',
+            'sub' => [
+                'level' => 2,
+                'list' => [
+                    'one',
+                    'two',
+                ],
+                'hash' => [
+                    'one' => 1,
+                    'two' => 2,
+                ],
+                'null' => null,
+                'object' => stdClass::class,
+            ],
+        ];
+        $writer = new PhpArray();
+        $writer->toFile($this->file, $config);
+
+        $updated = $this->configResource->patchKey($key, $value);
+        $expected = ArrayUtils::merge($config, $expected);
+        $this->assertEquals($expected, $updated);
     }
 }
