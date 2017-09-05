@@ -87,6 +87,8 @@ class ConfigResourceTest extends TestCase
             ],
             'baz' => 'not what you think',
         ];
+        $writer = new PhpArray();
+        $writer->toFile($this->file, $config);
         $configResource = new ConfigResource($config, $this->file, $this->writer);
 
         $patch = [
@@ -98,8 +100,10 @@ class ConfigResourceTest extends TestCase
         $this->assertEquals($patch, $response);
 
         $expected = [
+            'foo' => 'bar',
             'bar' => [
                 'baz' => 'UPDATED',
+                'bat' => 'bogus',
             ],
             'baz' => 'what you think',
         ];
