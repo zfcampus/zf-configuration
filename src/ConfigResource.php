@@ -55,6 +55,7 @@ class ConfigResource
      * Expects data to be in the form of key/value pairs
      *
      * @param  array|stdClass|Traversable $data
+     * @param  bool $tree
      * @return array
      */
     public function patch($data, $tree = false)
