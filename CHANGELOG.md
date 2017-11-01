@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.3.1 - TBD
+## 1.3.1 - 2017-11-01
 
 ### Added
 
@@ -10,7 +10,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#25](https://github.com/zfcampus/zf-configuration/pull/25) changes the
+  behavior of `ConfigResource::patchKey()` to do what it is advertised to do:
+  merge incoming configuration. Previously, it was overwriting configuration,
+  which could in some extreme instances lead to lost configuration. The behavior
+  is now correct.
 
 ### Deprecated
 
@@ -42,24 +46,6 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#23](https://github.com/zfcampus/zf-configuration/pull/23) removes support
   for HHVM.
-
-### Fixed
-
-- Nothing.
-
-## 1.2.2 - TBD
-
-### Added
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
 
 ### Fixed
 
