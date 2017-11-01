@@ -192,10 +192,8 @@ class ConfigResource
 
         $key = array_shift($keys);
 
-        $haveKeys = (count($keys) > 0) ? true : false;
-
         // If no more keys, overwrite and return
-        if (! $haveKeys) {
+        if (! $keys) {
             $config[$key] = $value;
             return $config;
         }
@@ -307,7 +305,7 @@ class ConfigResource
     protected function extractAndSet(array $keys, $value, &$array)
     {
         $key = array_shift($keys);
-        if (count($keys)) {
+        if ($keys) {
             if (! isset($array[$key]) || ! is_array($array[$key])) {
                 $array[$key] = [];
             }
@@ -331,7 +329,7 @@ class ConfigResource
             return;
         }
 
-        if (1 > count($keys)) {
+        if (! $keys) {
             unset($array[$key]);
             return;
         }

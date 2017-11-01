@@ -40,9 +40,7 @@ class ModuleUtils
     public function getModulePath($moduleName)
     {
         $moduleName = $this->normalizeModuleName($moduleName);
-        if (isset($this->moduleData[$moduleName])
-            && isset($this->moduleData[$moduleName]['path'])
-        ) {
+        if (isset($this->moduleData[$moduleName]['path'])) {
             return $this->moduleData[$moduleName]['path'];
         }
 
@@ -63,9 +61,7 @@ class ModuleUtils
     public function getModuleConfigPath($moduleName)
     {
         $moduleName = $this->normalizeModuleName($moduleName);
-        if (isset($this->moduleData[$moduleName])
-            && isset($this->moduleData[$moduleName]['config'])
-        ) {
+        if (isset($this->moduleData[$moduleName]['config'])) {
             return $this->moduleData[$moduleName]['config'];
         }
 
