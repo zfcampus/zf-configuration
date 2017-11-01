@@ -10,7 +10,7 @@ cache:
 env:
   global:
     - COMPOSER_ARGS="--no-interaction"
-    - LEGACY_DEPS="phpunit/phpunit"
+    - COVERAGE_DEPS="satooshi/php-coveralls"
 
 matrix:
   fast_finish: false
@@ -18,22 +18,29 @@ matrix:
     - php: 5.6
       env:
         - DEPS=lowest
+        - LEGACY_DEPS="doctrine/instantiator phpunit/phpunit"
     - php: 5.6
       env:
         - DEPS=locked
+        - LEGACY_DEPS="doctrine/instantiator phpunit/phpunit"
     - php: 5.6
       env:
         - DEPS=latest
+        - LEGACY_DEPS="doctrine/instantiator phpunit/phpunit"
     - php: 7
       env:
         - DEPS=lowest
+        - LEGACY_DEPS="doctrine/instantiator"
     - php: 7
       env:
         - DEPS=locked
+        - LEGACY_DEPS="doctrine/instantiator"
+        - TEST_COVERAGE=true
         - CS_CHECK=true
     - php: 7
       env:
         - DEPS=latest
+        - LEGACY_DEPS="doctrine/instantiator"
     - php: 7.1
       env:
         - DEPS=lowest
@@ -59,16 +66,20 @@ notifications:
   email: false
 
 before_install:
-  - if [[ $TEST_COVERAGE != 'true' && ! $TRAVIS_PHP_VERSION =~ ^7.2 ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
   - travis_retry composer self-update
 
 install:
   - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
-  - if [[ $TRAVIS_PHP_VERSION =~ ^5.6 ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
+  - if [[ $LEGACY_DEPS != '' ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
-  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
+  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update $COMPOSER_ARGS --prefer-lowest --prefer-stable ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
   - stty cols 120 && composer show
 
 script:
-  - composer test
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+
+after_script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer upload-coverage ; fi

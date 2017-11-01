@@ -65,6 +65,10 @@ class ResourceFactory
         return new ConfigResource($config, $filePath, $this->writer);
     }
 
+    /**
+     * @param string $moduleName
+     * @return string
+     */
     protected function normalizeModuleName($moduleName)
     {
         return str_replace(['.', '/'], '\\', $moduleName);

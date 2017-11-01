@@ -2,6 +2,7 @@ ZF Configuration
 ================
 
 [![Build Status](https://travis-ci.org/zfcampus/zf-configuration.png)](https://travis-ci.org/zfcampus/zf-configuration)
+[![Coverage Status](https://coveralls.io/repos/github/zfcampus/zf-configuration/badge.svg?branch=master)](https://coveralls.io/github/zfcampus/zf-configuration?branch=master)
 
 Introduction
 ------------
