@@ -39,6 +39,8 @@ class ConfigResource
 
     /**
      * @param array $config
+     * @param string $fileName
+     * @param ConfigWriter $writer
      */
     public function __construct(array $config, $fileName, ConfigWriter $writer)
     {
@@ -55,6 +57,7 @@ class ConfigResource
      * Expects data to be in the form of key/value pairs
      *
      * @param  array|stdClass|Traversable $data
+     * @param  bool $tree
      * @return array
      */
     public function patch($data, $tree = false)
@@ -279,6 +282,7 @@ class ConfigResource
      * @param array $patchValues
      * @param string $key
      * @param mixed $value
+     * @throws Exception\InvalidArgumentException
      */
     public function createNestedKeyValuePair(&$patchValues, $key, $value)
     {

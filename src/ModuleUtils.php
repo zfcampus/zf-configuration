@@ -12,7 +12,7 @@ use Zend\ModuleManager\ModuleManager;
 class ModuleUtils
 {
     /**
-     * @var ModuleManager
+     * @var array
      */
     protected $modules = [];
 
@@ -79,7 +79,7 @@ class ModuleUtils
      * Validate that the module actually exists
      *
      * @param  string $moduleName
-     * @throws Exception\InvalidArgumentException if themodule does not exist
+     * @throws Exception\InvalidArgumentException if the module does not exist
      */
     protected function validateModule($moduleName)
     {
