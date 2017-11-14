@@ -110,9 +110,25 @@ class ConfigResource
      */
     public function patchKey($key, $value)
     {
-        $this->patch([$key => $value]);
+        // Get local config file
+        $config = [];
+        if (file_exists($this->fileName)) {
+            $config = include $this->fileName;
+            if (! is_array($config)) {
+                $config = [];
+            }
+        }
+        $config = $this->replaceKey($key, $value, $config);
 
-        return $this->config;
+        // Write to configuration file
+        $this->writer->toFile($this->fileName, $config);
+        $this->invalidateCache($this->fileName);
+
+        // Reseed configuration
+        $this->config = $config;
+
+        // Return written values
+        return $config;
     }
 
     /**
