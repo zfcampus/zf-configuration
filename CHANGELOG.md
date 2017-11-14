@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.3.2 - TBD
+## 1.3.2 - 2017-11-14
 
 ### Added
 
@@ -32,7 +32,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#29](https://github.com/zfcampus/zf-configuration/pull/29) reverts the
+  changes from 1.3.1, as we discovered they were backwards-incompatible with how
+  zf-apigility-admin utilizes the component. We will re-introduce them for a new
+  major release.
 
 ### Deprecated
 
