@@ -55,45 +55,13 @@ class ConfigResource
     }
 
     /**
-     * Return a standard Array for the
-     * passed parameter
-     *
-     * @param  array|stdClass|Traversable $data
-     * @return array
-     */
-    protected function normalizeArray($data)
-    {
-        if ($data instanceof Traversable) {
-            $data = ArrayUtils::iteratorToArray($data);
-        }
-
-        if ($data instanceof stdClass) {
-            $data = (array) $data;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get config from file.  This reads the
-     * file assicated with the ConfigResource
-     * and returns the values from the file
-     * without changing the values of the ConfigResource
+     * Return the config managed by this resource
      *
      * @return array
      */
-    protected function getConfigFromFile()
+    public function getConfig()
     {
-        $config = [];
-        if (file_exists($this->getFileName())) {
-            $config = include($this->getFileName());
-
-            if (! is_array($config)) {
-                $config = [];
-            }
-        }
-
-        return $config;
+        return $this->config;
     }
 
     /**
@@ -106,23 +74,41 @@ class ConfigResource
         return $this->fileName;
     }
 
-    public function getConfig()
+    /**
+     * Fetch all configuration values
+     *
+     * Flattens nested configuration to dot-separated key/value pairs and returns them.
+     *
+     * @param  bool $tree
+     * @return array
+     */
+    public function fetch($tree = false)
     {
-        return $this->config;
+        // If requested as a tree, return as-is
+        if ($tree) {
+            return $this->config;
+        }
+
+        // Collapse to key/value pairs -- meaning to dot-separated nested keys
+        return $this->traverseArray($this->config);
     }
 
     /**
-     * Write the ConfigResource array to file
+     * Patch a single (potentially nested) key in the config file
      *
-     * @return this
+     * @param  string $key
+     * @param  mixed $value
+     * @return array
      */
-    protected function write()
+    public function patchKey($key, $value)
     {
-        // Write to configuration file
-        $this->writer->toFile($this->getFileName(), $this->getConfig());
-        $this->invalidateCache();
+        if (is_array($key)) {
+            $key = implode('.', $key);
+        }
 
-        return $this;
+        $this->patch([$key => $value]);
+
+        return $this->config;
     }
 
     /**
@@ -157,61 +143,6 @@ class ConfigResource
     }
 
     /**
-     * Patch a single (potentially nested) key in the config file
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return array
-     */
-    public function patchKey($key, $value)
-    {
-        if (is_array($key)) {
-            $key = implode('.', $key);
-        }
-
-        $this->patch([$key => $value]);
-
-        return $this->config;
-    }
-
-    /**
-     * Overwrite configuration
-     *
-     * Used by consumers only; takes the configuration data and writes it verbatim.
-     *
-     * @param  array|stdClass|Traversable $data
-     * @return array
-     */
-    public function overWrite($data)
-    {
-        $data = $this->normalizeArray($data);
-
-        $this->config = $data;
-        $this->write();
-
-        return $data;
-    }
-
-    /**
-     * Fetch all configuration values
-     *
-     * Flattens nested configuration to dot-separated key/value pairs and returns them.
-     *
-     * @param  bool $tree
-     * @return array
-     */
-    public function fetch($tree = false)
-    {
-        // If requested as a tree, return as-is
-        if ($tree) {
-            return $this->config;
-        }
-
-        // Collapse to key/value pairs -- meaning to dot-separated nested keys
-        return $this->traverseArray($this->config);
-    }
-
-    /**
      * Replace a nested key
      *
      * First invocation should pass a dot-separated string representing a
@@ -226,9 +157,9 @@ class ConfigResource
      * @param  array $config
      * @return array
      */
-    public function replaceKey($keys, $value, array $config = [])
+    public function replaceKey($keys, $value, array $config = null)
     {
-        if (! $config) {
+        if (is_null($config)) {
             $config = $this->getConfig();
         }
 
@@ -297,6 +228,24 @@ class ConfigResource
     }
 
     /**
+     * Overwrite configuration
+     *
+     * Used by consumers only; takes the configuration data and writes it verbatim.
+     *
+     * @param  array|stdClass|Traversable $data
+     * @return array
+     */
+    public function overWrite($data)
+    {
+        $data = $this->normalizeArray($data);
+
+        $this->config = $data;
+        $this->write();
+
+        return $data;
+    }
+
+    /**
      * Traverse a nested array and flatten to dot-separated key/value pairs
      *
      * @param  array $array
@@ -339,6 +288,62 @@ class ConfigResource
         }
 
         $this->extractAndSet(explode('.', $key), $value, $patchValues);
+    }
+
+    /**
+     * Return a standard Array for the
+     * passed parameter
+     *
+     * @param  array|stdClass|Traversable $data
+     * @return array
+     */
+    protected function normalizeArray($data)
+    {
+        if ($data instanceof Traversable) {
+            $data = ArrayUtils::iteratorToArray($data);
+        }
+
+        if ($data instanceof stdClass) {
+            $data = (array) $data;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get config from file.  This reads the
+     * file assicated with the ConfigResource
+     * and returns the values from the file
+     * without changing the values of the ConfigResource
+     *
+     * @return array
+     */
+    protected function getConfigFromFile()
+    {
+        $config = [];
+        if (file_exists($this->getFileName())) {
+            $config = include($this->getFileName());
+
+            if (! is_array($config)) {
+                $config = [];
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Write the ConfigResource array to file
+     *
+     * @return this
+     */
+    protected function write()
+    {
+        // Write to configuration file
+        $this->writer->toFile($this->getFileName(), $this->getConfig());
+        $this->invalidateCache();
+
+        return $this;
     }
 
     /**
