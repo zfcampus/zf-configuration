@@ -189,8 +189,10 @@ class ConfigResourceTest extends TestCase
         $this->assertEquals($patch, $response);
 
         $expected = [
+            'foo' => 'bar',
             'bar' => [
                 'baz' => 'UPDATED',
+                'bat' => 'bogus',
             ],
             'baz' => 'what you think',
         ];
@@ -523,11 +525,11 @@ class ConfigResourceTest extends TestCase
                 'object' => stdClass::class,
             ],
         ];
-        $writer = new PhpArray();
-        $writer->toFile($this->file, $config);
+        $this->configResource->overWrite($config);
 
         $updated = $this->configResource->patchKey($key, $value);
         $expected = ArrayUtils::merge($config, $expected);
+
         $this->assertEquals($expected, $updated);
     }
 }

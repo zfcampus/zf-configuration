@@ -47,6 +47,80 @@ class ConfigResource
         $this->config   = $config;
         $this->fileName = $fileName;
         $this->writer   = $writer;
+
+        // The config of this object should be the same as the local file it manages
+        $this->write();
+    }
+
+    /**
+     * Return a standard Array for the
+     * passed parameter
+     *
+     * @param  array|stdClass|Traversable $data
+     * @return array
+     */
+    protected function normalizeArray($data)
+    {
+        if ($data instanceof Traversable) {
+            $data = ArrayUtils::iteratorToArray($data);
+        }
+
+        if ($data instanceof stdClass) {
+            $data = (array) $data;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get config from file.  This reads the
+     * file assicated with the ConfigResource
+     * and returns the values from the file
+     * without changing the values of the ConfigResource
+     *
+     * @return array
+     */
+    protected function getConfigFromFile()
+    {
+        $config = [];
+        if (file_exists($this->getFileName())) {
+            $config = include($this->getFileName());
+
+            if (! is_array($config)) {
+                $config = [];
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Return the file name for the config file
+     *
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Write the ConfigResource array to file
+     *
+     * @return this
+     */
+    protected function write()
+    {
+        // Write to configuration file
+        $this->writer->toFile($this->getFileName(), $this->getConfig());
+        $this->invalidateCache();
+
+        return $this;
     }
 
     /**
@@ -60,40 +134,21 @@ class ConfigResource
      */
     public function patch($data, $tree = false)
     {
-        if ($data instanceof Traversable) {
-            $data = ArrayUtils::iteratorToArray($data);
-        }
-
-        if ($data instanceof stdClass) {
-            $data = (array) $data;
-        }
+        $data = $this->normalizeArray($data);
 
         // Update configuration from dot-separated key/value pairs
+        $patchValues = $data;
+
         if (! $tree) {
             $patchValues = [];
+
             foreach ($data as $key => $value) {
                 $this->createNestedKeyValuePair($patchValues, $key, $value);
             }
-        } else {
-            $patchValues = $data;
         }
 
-        // Get local config file
-        $localConfig = [];
-        if (file_exists($this->fileName)) {
-            $localConfig = include $this->fileName;
-            if (! is_array($localConfig)) {
-                $localConfig = [];
-            }
-        }
-        $localConfig = ArrayUtils::merge($localConfig, $patchValues);
-
-        // Write to configuration file
-        $this->writer->toFile($this->fileName, $localConfig);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
-        $this->config = $localConfig;
+        $this->config = ArrayUtils::merge($this->getConfig(), $patchValues);
+        $this->write();
 
         // Return written values
         return $data;
@@ -108,6 +163,10 @@ class ConfigResource
      */
     public function patchKey($key, $value)
     {
+        if (is_array($key)) {
+            $key = implode('.', $key);
+        }
+
         $this->patch([$key => $value]);
 
         return $this->config;
@@ -118,16 +177,15 @@ class ConfigResource
      *
      * Used by consumers only; takes the configuration data and writes it verbatim.
      *
-     * @param  array $data
+     * @param  array|stdClass|Traversable $data
      * @return array
      */
-    public function overWrite(array $data)
+    public function overWrite($data)
     {
-        $this->writer->toFile($this->fileName, $data);
-        $this->invalidateCache($this->fileName);
+        $data = $this->normalizeArray($data);
 
-        // Reseed configuration
         $this->config = $data;
+        $this->write();
 
         return $data;
     }
@@ -166,19 +224,26 @@ class ConfigResource
      * @param  array $config
      * @return array
      */
-    public function replaceKey($keys, $value, array $config)
+    public function replaceKey($keys, $value, array $config = [])
     {
+        if (! $config) {
+            $config = $this->getConfig();
+        }
+
         if (! is_array($keys)) {
             $keys = explode('.', $keys);
         }
 
         $key = array_shift($keys);
 
-        $haveKeys = (count($keys) > 0) ? true : false;
+        $haveKeys = (bool) count($keys) > 0;
 
         // If no more keys, overwrite and return
         if (! $haveKeys) {
             $config[$key] = $value;
+            $this->config = $config;
+            $this->write();
+
             return $config;
         }
 
@@ -187,12 +252,18 @@ class ConfigResource
         if (! isset($config[$key])
             || ! ArrayUtils::isHashTable($config[$key])
         ) {
-            $config[$key] = $this->replaceKey($keys, $value, []);
+            $config[$key] = $this->replaceKey($keys, $value);
+            $this->config = $config;
+            $this->write();
+
             return $config;
         }
 
         // Otherwise, recurse through it
         $config[$key] = $this->replaceKey($keys, $value, $config[$key]);
+        $this->config = $config;
+        $this->write();
+
         return $config;
     }
 
@@ -206,14 +277,7 @@ class ConfigResource
      */
     public function deleteKey($keys)
     {
-        // Get local config file
-        $config = [];
-        if (file_exists($this->fileName)) {
-            $config = include $this->fileName;
-            if (! is_array($config)) {
-                $config = [];
-            }
-        }
+        $config = $this->getConfig();
 
         if (! is_array($keys)) {
             $keys = explode('.', $keys);
@@ -224,11 +288,8 @@ class ConfigResource
         }
 
         $this->deleteByKey($config, $keys);
-        $this->writer->toFile($this->fileName, $config);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
         $this->config = $config;
+        $this->write();
 
         return $config;
     }
@@ -294,8 +355,10 @@ class ConfigResource
             }
             $reference   = &$array[$key];
             $this->extractAndSet($keys, $value, $reference);
+
             return;
         }
+
         $array[$key] = $value;
     }
 
@@ -314,8 +377,10 @@ class ConfigResource
 
         if (1 > count($keys)) {
             unset($array[$key]);
+
             return;
         }
+
         $this->deleteByKey($array[$key], $keys);
     }
 
@@ -324,12 +389,10 @@ class ConfigResource
      *
      * @param  string $filename
      */
-    protected function invalidateCache($filename)
+    protected function invalidateCache()
     {
-        if (! $this->opcacheEnabled) {
-            return;
+        if ($this->opcacheEnabled) {
+            opcache_invalidate($this->getFileName(), true);
         }
-
-        opcache_invalidate($filename, true);
     }
 }
