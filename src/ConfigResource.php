@@ -39,6 +39,8 @@ class ConfigResource
 
     /**
      * @param array $config
+     * @param string $fileName
+     * @param ConfigWriter $writer
      */
     public function __construct(array $config, $fileName, ConfigWriter $writer)
     {
