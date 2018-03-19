@@ -39,8 +39,6 @@ class ConfigResource
 
     /**
      * @param array $config
-     * @param string $fileName
-     * @param ConfigWriter $writer
      */
     public function __construct(array $config, $fileName, ConfigWriter $writer)
     {
@@ -110,25 +108,9 @@ class ConfigResource
      */
     public function patchKey($key, $value)
     {
-        // Get local config file
-        $config = [];
-        if (file_exists($this->fileName)) {
-            $config = include $this->fileName;
-            if (! is_array($config)) {
-                $config = [];
-            }
-        }
-        $config = $this->replaceKey($key, $value, $config);
+        $this->patch([$key => $value]);
 
-        // Write to configuration file
-        $this->writer->toFile($this->fileName, $config);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
-        $this->config = $config;
-
-        // Return written values
-        return $config;
+        return $this->config;
     }
 
     /**
@@ -192,8 +174,10 @@ class ConfigResource
 
         $key = array_shift($keys);
 
+        $haveKeys = (count($keys) > 0) ? true : false;
+
         // If no more keys, overwrite and return
-        if (! $keys) {
+        if (! $haveKeys) {
             $config[$key] = $value;
             return $config;
         }
@@ -280,7 +264,6 @@ class ConfigResource
      * @param array $patchValues
      * @param string $key
      * @param mixed $value
-     * @throws Exception\InvalidArgumentException
      */
     public function createNestedKeyValuePair(&$patchValues, $key, $value)
     {
@@ -305,7 +288,7 @@ class ConfigResource
     protected function extractAndSet(array $keys, $value, &$array)
     {
         $key = array_shift($keys);
-        if ($keys) {
+        if (count($keys)) {
             if (! isset($array[$key]) || ! is_array($array[$key])) {
                 $array[$key] = [];
             }
@@ -329,7 +312,7 @@ class ConfigResource
             return;
         }
 
-        if (! $keys) {
+        if (1 > count($keys)) {
             unset($array[$key]);
             return;
         }
