@@ -135,7 +135,7 @@ class ConfigResource
             }
         }
 
-        $this->config = ArrayUtils::merge($this->getConfig(), $patchValues);
+        $this->config = ArrayUtils::merge($this->getConfig(), $patchValues, true);
         $this->write();
 
         // Return written values
