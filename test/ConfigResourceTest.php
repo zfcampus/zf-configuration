@@ -436,10 +436,10 @@ class ConfigResourceTest extends TestCase
             ],
             'nested-list' => [
                 'sub.list',
-                ['three', 'four'],
+                [0 => 'three', 1 => 'four'],
                 [
                     'sub' => [
-                        'list' => ['three', 'four'],
+                        'list' => [0 => 'three', 1 => 'four'],
                     ],
                 ],
             ],
@@ -514,8 +514,8 @@ class ConfigResourceTest extends TestCase
             'sub' => [
                 'level' => 2,
                 'list' => [
-                    'one',
-                    'two',
+                    0 => 'one',
+                    1 => 'two',
                 ],
                 'hash' => [
                     'one' => 1,
@@ -528,7 +528,7 @@ class ConfigResourceTest extends TestCase
         $this->configResource->overWrite($config);
 
         $updated = $this->configResource->patchKey($key, $value);
-        $expected = ArrayUtils::merge($config, $expected);
+        $expected = ArrayUtils::merge($config, $expected, true);
 
         $this->assertEquals($expected, $updated);
     }
