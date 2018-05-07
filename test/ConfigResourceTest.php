@@ -18,7 +18,7 @@ class ConfigResourceTest extends TestCase
     protected $configResource;
     protected $writer;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->removeScaffold();
         $this->file = tempnam(sys_get_temp_dir(), 'zfconfig');
@@ -28,7 +28,7 @@ class ConfigResourceTest extends TestCase
         $this->configResource = new ConfigResource([], $this->file, $this->writer);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->removeScaffold();
     }

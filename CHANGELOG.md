@@ -24,11 +24,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.3.3 - TBD
+## 1.3.3 - 2018-05-07
 
 ### Added
 
-- Nothing.
+- [#32](https://github.com/zfcampus/zf-configuration/pull/32) adds support for PHP 7.2.
 
 ### Changed
 
