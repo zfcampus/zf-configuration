@@ -1,22 +1,18 @@
-ZF Configuration
-================
+# ZF Configuration
 
-[![Build Status](https://travis-ci.org/zfcampus/zf-configuration.png)](https://travis-ci.org/zfcampus/zf-configuration)
+[![Build Status](https://secure.travis-ci.org/zfcampus/zf-configuration.svg?branch=master)](https://secure.travis-ci.org/zfcampus/zf-configuration)
 [![Coverage Status](https://coveralls.io/repos/github/zfcampus/zf-configuration/badge.svg?branch=master)](https://coveralls.io/github/zfcampus/zf-configuration?branch=master)
 
-Introduction
-------------
+## Introduction
 
 zf-configuration is a module that provides configuration services that provide for the
 runtime management and modification of Zend Framework application configuration files.
 
-Requirements
-------------
+## Requirements
   
 Please see the [composer.json](composer.json) file.
 
-Installation
-------------
+## Installation
 
 Run the following `composer` command:
 
@@ -53,8 +49,7 @@ return [
 > If you use [zf-component-installer](https://github.com/zendframework/zf-component-installer),
 > that plugin will install zf-configuration as a module for you.
 
-Configuration
--------------
+## Configuration
 
 ### User Configuration
 
@@ -79,13 +74,11 @@ syntax.
 
 Set this value to a boolean `true` if you want to use PHP 5.5's class name scalars (`::class` notation).
 
-ZF2 Events
-----------
+### ZF Events
 
 There are no events or listeners.
 
-ZF2 Services
-------------
+### ZF Services
 
 #### ZF\Configuration\ConfigWriter
 
