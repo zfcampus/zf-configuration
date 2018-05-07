@@ -16,7 +16,7 @@ class ResourceFactoryTest extends TestCase
     protected $testWriter = null;
     protected $resourceFactory = null;
 
-    public function setup()
+    protected function setUp()
     {
         $this->resourceFactory = new ResourceFactory(
             $this->getMockBuilder(ModuleUtils::class, [], [], '', false)
