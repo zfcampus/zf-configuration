@@ -92,6 +92,9 @@ service serves the purpose of providing the necessary dependencies for `ConfigRe
 methods such as `patch()` and `replace()`.  The service returned by the service manager is bound to
 the file specified in the `config_file` key.
 
+The config that is written is sorted by its keys. To disable this, use`setSortingEnabled` and provide 
+`false` as a parameter.
+
 #### ZF\Configuration\ConfigResourceFactory
 
 `ZF\Configuration\ConfigResourceFactory` is a factory service that provides consumers with the
