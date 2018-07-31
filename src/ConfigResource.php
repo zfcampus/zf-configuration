@@ -90,12 +90,7 @@ class ConfigResource
         }
         $localConfig = ArrayUtils::merge($localConfig, $patchValues);
 
-        // Write to configuration file
-        $this->writer->toFile($this->fileName, $localConfig);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
-        $this->config = $localConfig;
+        $this->overWrite($localConfig);
 
         // Return written values
         return $data;
@@ -120,15 +115,7 @@ class ConfigResource
         }
         $config = $this->replaceKey($key, $value, $config);
 
-        // Write to configuration file
-        $this->writer->toFile($this->fileName, $config);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
-        $this->config = $config;
-
-        // Return written values
-        return $config;
+        return $this->overWrite($config);
     }
 
     /**
@@ -141,7 +128,10 @@ class ConfigResource
      */
     public function overWrite(array $data)
     {
+        $this->sortKeysRecursively($data);
+
         $this->writer->toFile($this->fileName, $data);
+
         $this->invalidateCache($this->fileName);
 
         // Reseed configuration
@@ -240,13 +230,8 @@ class ConfigResource
         }
 
         $this->deleteByKey($config, $keys);
-        $this->writer->toFile($this->fileName, $config);
-        $this->invalidateCache($this->fileName);
 
-        // Reseed configuration
-        $this->config = $config;
-
-        return $config;
+        return $this->overWrite($config);
     }
 
     /**
@@ -348,5 +333,16 @@ class ConfigResource
         }
 
         opcache_invalidate($filename, true);
+    }
+
+    protected function sortKeysRecursively(array &$data)
+    {
+        foreach ($data as &$value) {
+            if (is_array($value)) {
+                $this->sortKeysRecursively($value);
+            }
+        }
+
+        return ksort($data);
     }
 }
