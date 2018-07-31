@@ -33,6 +33,13 @@ class ConfigResource
     protected $opcacheEnabled = false;
 
     /**
+     * Whether or not sorting of the config is enabled.
+     *
+     * @var bool
+     */
+    protected $sortingEnabled = true;
+
+    /**
      * @var ConfigWriter
      */
     protected $writer;
@@ -49,6 +56,16 @@ class ConfigResource
         $this->config   = $config;
         $this->fileName = $fileName;
         $this->writer   = $writer;
+    }
+
+    /**
+     * Enables or disables the sorting of the config data.
+     *
+     * @param bool $enabled
+     */
+    public function setSortingEnabled($enabled)
+    {
+        $this->sortingEnabled = $enabled;
     }
 
     /**
@@ -128,7 +145,9 @@ class ConfigResource
      */
     public function overWrite(array $data)
     {
-        $this->sortKeysRecursively($data);
+        if ($this->sortingEnabled) {
+            $this->sortKeysRecursively($data);
+        }
 
         $this->writer->toFile($this->fileName, $data);
 

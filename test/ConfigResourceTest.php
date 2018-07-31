@@ -457,4 +457,25 @@ class ConfigResourceTest extends TestCase
         self::assertEquals('z', $secondKey);
         self::assertEquals('2', $secondVal);
     }
+
+    public function testDataIsNotSortedWhenDisabled()
+    {
+        // Arrange
+        $config = [
+            'z' => 1,
+            'a' => 2,
+        ];
+
+        $configResource = new ConfigResource($config, $this->file, new PhpArray());
+
+        // Act
+        $configResource->setSortingEnabled(false);
+        $configResource->overWrite($config);
+
+        // Assert
+        $test = include $this->file;
+
+        self::assertEquals(1, current($test));
+        self::assertEquals(2, next($test));
+    }
 }
