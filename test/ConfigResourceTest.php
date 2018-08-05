@@ -402,4 +402,80 @@ class ConfigResourceTest extends TestCase
         $test = include $this->file;
         $this->assertEquals($expected, $test);
     }
+
+    public function testDataIsSortedByKey()
+    {
+        // Arrange
+        $config = [
+            'z' => 1,
+            'a' => 2,
+        ];
+
+        $configResource = new ConfigResource($config, $this->file, new PhpArray());
+
+        // Act
+        $configResource->overWrite($config);
+
+        // Assert
+        $test = include $this->file;
+
+        self::assertEquals(2, current($test));
+        self::assertEquals(1, next($test));
+    }
+
+    public function testDataIsSortedRecursivelyByKey()
+    {
+        // Arrange
+        $config = [
+            'z' => [
+                'z' => 1,
+                'a' => 2,
+            ],
+            'a' => [
+                'z' => 1,
+                'a' => 2,
+            ],
+        ];
+
+        $configResource = new ConfigResource($config, $this->file, new PhpArray());
+
+        // Act
+        $configResource->overWrite($config);
+
+        // Assert
+        $test = include $this->file;
+
+        $firstKey = key($test);
+        $firstVal = current($test[$firstKey]);
+        self::assertEquals('a', $firstKey);
+        self::assertEquals('2', $firstVal);
+
+        next($test);
+
+        $secondKey = key($test);
+        $secondVal = current($test[$secondKey]);
+        self::assertEquals('z', $secondKey);
+        self::assertEquals('2', $secondVal);
+    }
+
+    public function testDataIsNotSortedByKeyWhenSortingIsDisabled()
+    {
+        // Arrange
+        $config = [
+            'z' => 1,
+            'a' => 2,
+        ];
+
+        $configResource = new ConfigResource($config, $this->file, new PhpArray());
+
+        // Act
+        $configResource->setSortingEnabled(false);
+        $configResource->overWrite($config);
+
+        // Assert
+        $test = include $this->file;
+
+        self::assertEquals(1, current($test));
+        self::assertEquals(2, next($test));
+    }
 }

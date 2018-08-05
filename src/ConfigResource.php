@@ -33,6 +33,13 @@ class ConfigResource
     protected $opcacheEnabled = false;
 
     /**
+     * Whether or not sorting of the config is enabled.
+     *
+     * @var bool
+     */
+    protected $sortingEnabled = true;
+
+    /**
      * @var ConfigWriter
      */
     protected $writer;
@@ -49,6 +56,16 @@ class ConfigResource
         $this->config   = $config;
         $this->fileName = $fileName;
         $this->writer   = $writer;
+    }
+
+    /**
+     * Enables or disables the sorting of the config data.
+     *
+     * @param bool $enabled
+     */
+    public function setSortingEnabled($enabled)
+    {
+        $this->sortingEnabled = (bool)$enabled;
     }
 
     /**
@@ -90,12 +107,7 @@ class ConfigResource
         }
         $localConfig = ArrayUtils::merge($localConfig, $patchValues);
 
-        // Write to configuration file
-        $this->writer->toFile($this->fileName, $localConfig);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
-        $this->config = $localConfig;
+        $this->overWrite($localConfig);
 
         // Return written values
         return $data;
@@ -120,15 +132,7 @@ class ConfigResource
         }
         $config = $this->replaceKey($key, $value, $config);
 
-        // Write to configuration file
-        $this->writer->toFile($this->fileName, $config);
-        $this->invalidateCache($this->fileName);
-
-        // Reseed configuration
-        $this->config = $config;
-
-        // Return written values
-        return $config;
+        return $this->overWrite($config);
     }
 
     /**
@@ -141,7 +145,12 @@ class ConfigResource
      */
     public function overWrite(array $data)
     {
+        if ($this->sortingEnabled) {
+            $this->sortKeysRecursively($data);
+        }
+
         $this->writer->toFile($this->fileName, $data);
+
         $this->invalidateCache($this->fileName);
 
         // Reseed configuration
@@ -240,13 +249,8 @@ class ConfigResource
         }
 
         $this->deleteByKey($config, $keys);
-        $this->writer->toFile($this->fileName, $config);
-        $this->invalidateCache($this->fileName);
 
-        // Reseed configuration
-        $this->config = $config;
-
-        return $config;
+        return $this->overWrite($config);
     }
 
     /**
@@ -348,5 +352,22 @@ class ConfigResource
         }
 
         opcache_invalidate($filename, true);
+    }
+
+    /**
+     * Sorts the provided array recursively based on its keys.
+     *
+     * @param array $data The array of data to sort.
+     * @return void
+     */
+    protected function sortKeysRecursively(array &$data)
+    {
+        foreach ($data as &$value) {
+            if (is_array($value)) {
+                $this->sortKeysRecursively($value);
+            }
+        }
+
+        ksort($data);
     }
 }
