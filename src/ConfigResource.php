@@ -65,7 +65,7 @@ class ConfigResource
      */
     public function setSortingEnabled($enabled)
     {
-        $this->sortingEnabled = $enabled;
+        $this->sortingEnabled = (bool)$enabled;
     }
 
     /**
