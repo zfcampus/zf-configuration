@@ -354,6 +354,12 @@ class ConfigResource
         opcache_invalidate($filename, true);
     }
 
+    /**
+     * Sorts the provided array recursively based on its keys.
+     *
+     * @param array $data The array of data to sort.
+     * @return void
+     */
     protected function sortKeysRecursively(array &$data)
     {
         foreach ($data as &$value) {
@@ -362,6 +368,6 @@ class ConfigResource
             }
         }
 
-        return ksort($data);
+        ksort($data);
     }
 }
