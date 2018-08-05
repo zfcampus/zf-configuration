@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - The configuration that is written is now sorted by its keys.
   This new feature is enabled by default. Sorting can be disabled by 
-  calling `->setSortingEnabled(false);`
+  calling `setSortingEnabled(false);` on the `ConfigResource` class.
 
 ### Changed
 
