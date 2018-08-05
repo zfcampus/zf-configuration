@@ -403,7 +403,7 @@ class ConfigResourceTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
-    public function testDataIsSorted()
+    public function testDataIsSortedByKey()
     {
         // Arrange
         $config = [
@@ -423,7 +423,7 @@ class ConfigResourceTest extends TestCase
         self::assertEquals(1, next($test));
     }
 
-    public function testDataIsSortedRecursively()
+    public function testDataIsSortedRecursivelyByKey()
     {
         // Arrange
         $config = [
@@ -458,7 +458,7 @@ class ConfigResourceTest extends TestCase
         self::assertEquals('2', $secondVal);
     }
 
-    public function testDataIsNotSortedWhenDisabled()
+    public function testDataIsNotSortedByKeyWhenSortingIsDisabled()
     {
         // Arrange
         $config = [
